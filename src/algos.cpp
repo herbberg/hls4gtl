@@ -1,6 +1,6 @@
-#include "../include/algos.h"
-#include "../include/requirements.h"
-#include "../include/templates.h"
+#include "algos.h"
+#include "requirements.h"
+#include "templates.h"
 
 void algos (const obj_t eg[max_obj], const obj_t jet[max_obj], ap_uint<n_algos>& algo)
 {
@@ -8,6 +8,7 @@ void algos (const obj_t eg[max_obj], const obj_t jet[max_obj], ap_uint<n_algos>&
 #pragma HLS INTERFACE ap_none port=algo
 #pragma HLS ARRAY_PARTITION variable=eg complete dim=1
 #pragma HLS ARRAY_PARTITION variable=jet complete dim=1
+//#pragma HLS pipeline II=1
 
 	const ap_uint<1> cond_double_eg_1 = cond_and_or<2,7>(double_eg_1_requ, eg);
 //	const ap_uint<1> cond_double_eg_1 = condition(eg, double_eg_1_requ, 2, 9); // neun Objekte max. !!!

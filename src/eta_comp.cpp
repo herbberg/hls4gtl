@@ -1,4 +1,4 @@
-#include "../include/eta_comp.h"
+#include "eta_comp.h"
 
 ap_uint<1> eta_comp (const obj_requ_t *requ, const obj_t *obj){
 
