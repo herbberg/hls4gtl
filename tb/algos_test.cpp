@@ -2,8 +2,6 @@
 #include "../include/algos.h"
 #include "../include/requirements.h"
 
-// Test bench for function algos
-
 int main () {
 
     const size_t ETA_SAMPLES=10;
