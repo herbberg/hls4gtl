@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "../headers/algos.h"
-#include "../headers/requirements.h"
+#include "../include/algos.h"
+#include "../include/requirements.h"
 
 int main () {
 

@@ -1,4 +1,4 @@
-#include "../headers/comp.h"
+#include "../include/comp.h"
 
 ap_uint<1> comp (const obj_requ_t *requ, const obj_t *obj){
 

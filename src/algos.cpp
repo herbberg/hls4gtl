@@ -1,6 +1,6 @@
-#include "../headers/algos.h"
-#include "../headers/requirements.h"
-#include "../headers/templates.h"
+#include "../include/algos.h"
+#include "../include/requirements.h"
+#include "../include/templates.h"
 
 void algos (const obj_t eg[max_obj], const obj_t jet[max_obj], ap_uint<n_algos>& algo)
 {
