@@ -10,11 +10,11 @@ void algos (const obj_t eg[max_obj], const obj_t jet[max_obj], ap_uint<n_algos>&
 #pragma HLS ARRAY_PARTITION variable=jet complete dim=1
 //#pragma HLS pipeline II=1
 
-	const ap_uint<1> cond_double_eg_1 = cond_and_or<2,7>(double_eg_1_requ, eg);
+	const ap_uint<1> cond_double_eg_1 = cond_and_or<2,6>(double_eg_1_requ, eg);
 //	const ap_uint<1> cond_double_eg_1 = condition(eg, double_eg_1_requ, 2, 9); // neun Objekte max. !!!
-	const ap_uint<1> cond_single_jet_1 = cond_and_or<1,7>(single_jet_1_requ, jet);
+	const ap_uint<1> cond_single_jet_1 = cond_and_or<1,6>(single_jet_1_requ, jet);
 //	const ap_uint<1> cond_single_jet_1 = condition(jet, single_jet_1_requ, 1, 9);
-	const ap_uint<1> cond_triple_eg_1 = cond_and_or<3,7>(triple_eg_1_requ, eg);
+	const ap_uint<1> cond_triple_eg_1 = cond_and_or<3,6>(triple_eg_1_requ, eg);
 //	const ap_uint<1> cond_triple_eg_1 = condition(eg, triple_eg_1_requ, 3, 9);
 
 	algo = 0;
