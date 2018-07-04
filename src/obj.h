@@ -9,8 +9,8 @@ typedef ap_uint<8> phi_t;
 typedef ap_uint<3> n_win_t;
 typedef ap_uint<1> bool_t;
 
-//#define ETA_WINDOWS 5
-//#define PHI_WINDOWS 2
+#define ETA_WINDOWS 5
+#define PHI_WINDOWS 2
 
 struct obj_t {
 	pt_t pt;
@@ -30,19 +30,24 @@ struct eta_win_t {
 
 struct obj_requ_t {
 	pt_t pt;
-	eta_win_t eta_w1;
-	eta_win_t eta_w2;
-	eta_win_t eta_w3;
-	eta_win_t eta_w4;
-	eta_win_t eta_w5;
+	eta_win_t eta[ETA_WINDOWS];
+//	eta_win_t eta_w1;
+//	eta_win_t eta_w2;
+//	eta_win_t eta_w3;
+//	eta_win_t eta_w4;
+//	eta_win_t eta_w5;
 	n_win_t n_eta;
-	phi_win_t phi_w1;
-	phi_win_t phi_w2;
+	phi_win_t phi[PHI_WINDOWS];
+//	phi_win_t phi_w1;
+//	phi_win_t phi_w2;
 	n_win_t n_phi;
 };
 
 // **********************************
 // new structs for "real" GTL objects
+
+#define ETA_WINDOWS 5
+#define PHI_WINDOWS 2
 
 typedef ap_uint<9> eg_pt_t;
 typedef ap_uint<11> jet_pt_t;
@@ -104,56 +109,62 @@ struct muon_phi_win_t {
 
 struct eg_obj_requ_t {
     eg_pt_t pt;
-    calo_eta_t eta_w1;
-    calo_eta_t eta_w2;
-    calo_eta_t eta_w3;
-    calo_eta_t eta_w4;
-    calo_eta_t eta_w5;
-    n_win_t n_eta;
-    calo_phi_t phi_w1;
-    calo_phi_t phi_w2;
-    n_win_t n_phi;
+    calo_eta_win_t eta[ETA_WINDOWS];
+//     calo_eta_win_t eta_w1;
+//     calo_eta_win_t eta_w2;
+//     calo_eta_win_t eta_w3;
+//     calo_eta_win_t eta_w4;
+//     calo_eta_win_t eta_w5;
+    ap_int<3> n_eta;
+    calo_phi_win_t phi[PHI_WINDOWS];
+//     calo_phi_win_t phi_w1;
+//     calo_phi_win_t phi_w2;
+    ap_int<2> n_phi;
 //    ap_uint<2> iso;
 };
 
 struct jet_obj_requ_t {
     jet_pt_t pt;
-    calo_eta_t eta_w1;
-    calo_eta_t eta_w2;
-    calo_eta_t eta_w3;
-    calo_eta_t eta_w4;
-    calo_eta_t eta_w5;
-    n_win_t n_eta;
-    calo_phi_t phi_w1;
-    calo_phi_t phi_w2;
-    n_win_t n_phi;
+    calo_eta_win_t eta[ETA_WINDOWS];
+//     calo_eta_win_t eta_w1;
+//     calo_eta_win_t eta_w2;
+//     calo_eta_win_t eta_w3;
+//     calo_eta_win_t eta_w4;
+//     calo_eta_win_t eta_w5;
+    ap_int<3> n_eta;
+    calo_phi_win_t phi[PHI_WINDOWS];
+//     calo_phi_win_t phi_w1;
+//     calo_phi_win_t phi_w2;
+    ap_int<2> n_phi;
 };
 
 struct tau_obj_requ_t {
     tau_pt_t pt;
-    calo_eta_t eta_w1;
-    calo_eta_t eta_w2;
-    calo_eta_t eta_w3;
-    calo_eta_t eta_w4;
-    calo_eta_t eta_w5;
-    n_win_t n_eta;
-    calo_phi_t phi_w1;
-    calo_phi_t phi_w2;
-    n_win_t n_phi;
+    calo_eta_win_t eta[ETA_WINDOWS];
+//     calo_eta_win_t eta_w1;
+//     calo_eta_win_t eta_w2;
+//     calo_eta_win_t eta_w3;
+//     calo_eta_win_t eta_w4;
+//     calo_eta_win_t eta_w5;
+    ap_int<3> n_eta;
+    calo_phi_win_t phi[PHI_WINDOWS];
+//     calo_phi_win_t phi_w1;
+//     calo_phi_win_t phi_w2;
+    ap_int<2> n_phi;
 //    ap_uint<2> iso;
 };
 
 struct muon_obj_requ_t {
-    muon_phi_t phi_w1;
-    muon_phi_t phi_w2;
+	muon_phi_win_t phi_w1;
+	muon_phi_win_t phi_w2;
     ap_uint<2> n_phi;
     muon_pt_t pt;
     ap_int<4> qual;
-    muon_eta_t eta_w1;
-    muon_eta_t eta_w2;
-    muon_eta_t eta_w3;
-    muon_eta_t eta_w4;
-    muon_eta_t eta_w5;
+    muon_eta_win_t eta_w1;
+    muon_eta_win_t eta_w2;
+    muon_eta_win_t eta_w3;
+    muon_eta_win_t eta_w4;
+    muon_eta_win_t eta_w5;
     ap_uint<3> n_eta;
     ap_uint<2> iso;
     ap_uint<2> charge;

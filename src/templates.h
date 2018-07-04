@@ -24,10 +24,10 @@ void comp_requ_vs_obj(T2 data[max_requ][max_obj], const obj_requ_t requirements[
 #pragma HLS ARRAY_PARTITION variable=data complete dim=0
 	init_2d<ap_uint<1>, max_requ, max_obj>(data, 0x1);
     for (size_t i = 0; i < NREQU; i++)
-#pragma HLS unroll // not used - warning in synthesis
+#pragma HLS unroll
         for (size_t j = 0; j < NOBJ; j++)
 #pragma HLS unroll
-        	data[i][j] = comp(&requirements[i], &objects[j]);
+        	data[i][j] = comp(requirements[i], objects[j]);
 }
 
 //template<typename T3, size_t MAXREQU, size_t MAXOBJ>
@@ -56,6 +56,34 @@ ap_uint<1> cond_and_or(const obj_requ_t requirements[max_requ], const obj_t obje
         }
     }
 	return data;
+}
+
+template<typename T1, typename T2>
+ap_uint<1> pt_comp_template(const T1& requ, const T2& obj)
+{
+#pragma HLS INTERFACE ap_ctrl_none port=return
+
+	ap_uint<1> pt_c = 0;
+
+	pt_c = obj.pt >= requ.pt;
+
+	return pt_c;
+}
+
+template<typename T1, typename T2>
+ap_uint<1> eta_comp_template(const T1& requ, const T2& obj)
+{
+#pragma HLS INTERFACE ap_ctrl_none port=return
+
+	ap_uint<1> eta_c = 0;
+
+	for (size_t i = 0; i < ETA_WINDOWS; i++) {
+#pragma HLS unroll
+		if (obj.eta <= requ.eta[i].upper and obj.eta >= requ.eta[i].lower and i <= requ.n_eta) {
+			eta_c = 1;
+		}
+	}
+	return eta_c;
 }
 
 #endif
