@@ -11,10 +11,9 @@ int main () {
     int eg_pt_0_p,eg_eta_0_p,eg_pt_1_p,eg_eta_1_p,eg_pt_2_p;
     int jet_pt_0_p,jet_eta_0_p;
     ap_uint<n_algos>  output = 0;
-    size_t o_p0 = 0;
     size_t row = 0;
-    obj_t eg_test[12] = {(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0)};
-    obj_t jet_test[12] = {(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0)};
+    eg_obj_t eg_test[12] = {(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0)};
+    jet_obj_t jet_test[12] = {(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0)};
     eg_test[0].pt = 9;
     eg_test[1].pt = 8;
     eg_test[2].pt = 6;
@@ -33,7 +32,7 @@ int main () {
 
             algos(eg_test, jet_test, output);
 
-            o_p0 = output;
+            size_t o_p0 = output;
             eg_pt_0_p = eg_test[0].pt;
             eg_eta_0_p = eg_test[0].eta;
             eg_pt_1_p = eg_test[1].pt;
@@ -60,7 +59,6 @@ int main () {
         eg_test[1].pt = eg_test[1].pt + 2;
         eg_test[2].pt = eg_test[2].pt + 1;
         jet_test[0].pt++;
-        o_p0 = 0;
     }
     fclose(fp);
 
