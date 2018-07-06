@@ -25,10 +25,8 @@ int main () {
     jet_test[0].pt = 9;
     jet_test[0].eta = 0;
 
-    fp=fopen("algos_out.dat","w");
-    fprintf(fp,"trans  algos  eg0  eg0   eg1  eg1    eg2  jet0 jet0\n");
-    fprintf(fp,"action        pt   eta   pt   eta    pt   pt    eta\n");
-    fprintf(fp,"---------------------------------------------------\n");
+    fp=fopen("algos_out_4_c_cosim.dat","w");
+    fprintf(fp,"[[[runtime]]]\n");
     for (size_t i=0;i<=PT_SAMPLES;i++) {
         for (size_t j=0;j<=ETA_SAMPLES;j++) {
 
@@ -43,10 +41,9 @@ int main () {
             jet_pt_0_p = jet_test[0].pt;
             jet_eta_0_p = jet_test[0].eta;
 
-            fprintf(fp,"   %3d  %04x  %3d  %3d   %3d  %3d    %3d   %3d  %3d\n",
-            row,o_p0,
-            eg_pt_0_p,eg_eta_0_p,eg_pt_1_p,eg_eta_1_p,eg_pt_2_p,
-            jet_pt_0_p,jet_eta_0_p);
+            fprintf(fp,"[[transaction]] %d\n", row);
+            fprintf(fp,"0x0%04x\n", o_p0);
+            fprintf(fp,"[[/transaction]] \n");
 
             eg_test[0].eta++;
             eg_test[1].eta++;
@@ -62,6 +59,7 @@ int main () {
         eg_test[2].pt = eg_test[2].pt + 1;
         jet_test[0].pt++;
     }
+    fprintf(fp,"[[[/runtime]]]\n");
     fclose(fp);
 
 }

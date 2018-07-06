@@ -1,0 +1,8 @@
+Project status:
+
+-- only 9 objects can be used. Using of more objects generates the following message in C synthesis:
+
+ERROR: [XFORM 203-504] Stop unrolling loop 'Loop-1' (hls4gtl/src/templates.h:136) in function 'comb_cond<jet_obj_requ_t, jet_obj_t, 1ul, 10ul>' 
+because it may cause large runtime and excessive memory usage due to increase in code size. Please avoid unrolling the loop or form sub-functions for code in the loop body.
+
+-- if number of objects (in total ?) exeeds a certain value (?), co-simulation failed!

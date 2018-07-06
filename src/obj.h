@@ -61,20 +61,20 @@ typedef ap_uint<10> muon_phi_t;
 struct eg_obj_t {
     eg_pt_t pt;
     calo_eta_t eta;
-    calo_phi_t phi;
+//    calo_phi_t phi;
 //    ap_int<2> iso;
 };
 
 struct jet_obj_t {
     jet_pt_t pt;
     calo_eta_t eta;
-    calo_phi_t phi;
+//    calo_phi_t phi;
 };
 
 struct tau_obj_t {
     tau_pt_t pt;
     calo_eta_t eta;
-    calo_phi_t phi;
+//    calo_phi_t phi;
 //    ap_int<2> iso;
 };
 
