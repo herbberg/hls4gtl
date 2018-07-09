@@ -91,7 +91,6 @@ ap_uint<1> comb_cond(const T2 requirements[max_requ], const T3 objects[max_obj])
 	ap_uint<1> data = 0;
 	ap_uint<1> comp_out[max_requ][max_obj];
 	comp_requ_vs_obj<ap_uint<1>, T2, T3, NREQU, NOBJ>(comp_out, requirements, objects);
-//#pragma HLS PIPELINE II=1
 	for (size_t i = 0; i < NOBJ; i++) {
 #pragma HLS unroll
         for (size_t j = 0; j < NOBJ; j++) {
