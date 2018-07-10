@@ -82,7 +82,7 @@ void comp_requ_vs_obj(T1 data[max_requ][max_obj], const T2 requirements[max_requ
 #pragma HLS unroll
         for (size_t j = 0; j < NOBJ; j++)
 #pragma HLS unroll
-            data[i][j] = comp_all(&requirements[i], &objects[j]);
+            data[i][j] = comp_all(requirements[i], objects[j]);
 }
 
 /* Workaround to trick HLS loop unrolling */
