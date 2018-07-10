@@ -1,8 +1,13 @@
 Project status:
 
+-- SUCCESS !!! Berhard updated templates and test bench (2018-07-10). Now we can use all 12 objects for all "comb_cond" (even for quad conditions.
+
+-- successfully tested (co-simulation ok!) 5 algos with 6 objects each, see "commit" eb6eeea... (2018-07-09)
+
 -- only 9 objects can be used. Using of more objects generates the following message in C synthesis:
 
 ERROR: [XFORM 203-504] Stop unrolling loop 'Loop-1' (hls4gtl/src/templates.h:136) in function 'comb_cond<jet_obj_requ_t, jet_obj_t, 1ul, 10ul>' 
 because it may cause large runtime and excessive memory usage due to increase in code size. Please avoid unrolling the loop or form sub-functions for code in the loop body.
 
 -- if number of objects (in total ?) exeeds a certain value (?), co-simulation failed!
+
