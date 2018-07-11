@@ -5,8 +5,8 @@
 
 int main()
 {
-    const size_t ETA_SAMPLES = 10;
-    const size_t PT_SAMPLES = 5;
+    const size_t ETA_SAMPLES = 11;
+    const size_t PT_SAMPLES = 6;
 
     eg_obj_t eg_test[12] = {
         {0, 0}, {0, 0}, {0, 0}, {0, 0},
