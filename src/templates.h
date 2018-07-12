@@ -3,7 +3,6 @@
 
 #include <cstdlib>
 #include "obj.h"
-#include "comp.h"
 #include "definitions.h"
 
 template<typename T1, typename T2>
@@ -127,6 +126,12 @@ ap_uint<1> comb_cond(const T2 requirements[max_requ], const T3 objects[max_obj])
 #pragma HLS unroll
         result |= comb_cond_partial<NOBJ>(i, matrix);
     }
+
+// Tried to implement a FF
+//    volatile ap_uint<1> temp;
+//    temp = result;
+//    return temp;
+
     return result;
 }
 
