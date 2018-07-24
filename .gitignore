@@ -1,0 +1,9 @@
+# Vivado HLS stuff
+.apc
+.settings
+.cproject
+.project
+.vivado*
+
+# Solutions
+/solution*
