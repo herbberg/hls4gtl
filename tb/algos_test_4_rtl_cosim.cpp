@@ -10,7 +10,7 @@ int main () {
 
     int eg_pt_0_p,eg_eta_0_p,eg_pt_1_p,eg_eta_1_p,eg_pt_2_p;
     int jet_pt_0_p,jet_eta_0_p;
-    ap_uint<n_algos>  output = 0;
+    ap_uint<N_ALGORITHMS>  output = 0;
     size_t row = 0;
     eg_obj_t eg_test[12] = {(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0)};
     jet_obj_t jet_test[12] = {(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0)};

@@ -41,7 +41,7 @@ int main()
     {
         for (size_t j = 0; j < ETA_SAMPLES; ++j)
         {
-            ap_uint<n_algos> output = 0;
+            ap_uint<N_ALGORITHMS> output = 0;
             algos(eg_test, jet_test, output);
 
             // type cast from ap_uint to size_t

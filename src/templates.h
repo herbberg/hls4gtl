@@ -71,12 +71,12 @@ void init_2d(T data[X][Y], const T value)
 }
 
 template<typename T1, typename T2, typename T3, size_t NREQU, size_t NOBJ>
-void comp_requ_vs_obj(T1 data[max_requ][max_obj], const T2 requirements[max_requ], const T3 objects[max_obj])
+void comp_requ_vs_obj(T1 data[MAX_REQ][MAX_OBJ], const T2 requirements[MAX_REQ], const T3 objects[MAX_OBJ])
 {
 #pragma HLS ARRAY_PARTITION variable=requirements complete dim=0
 #pragma HLS ARRAY_PARTITION variable=objects complete dim=0
 #pragma HLS ARRAY_PARTITION variable=data complete dim=0
-    init_2d<ap_uint<1>, max_requ, max_obj>(data, 0x1);
+    init_2d<ap_uint<1>, MAX_REQ, MAX_OBJ>(data, 0x1);
     for (size_t i = 0; i < NREQU; i++)
 #pragma HLS unroll
         for (size_t j = 0; j < NOBJ; j++)
@@ -86,7 +86,7 @@ void comp_requ_vs_obj(T1 data[max_requ][max_obj], const T2 requirements[max_requ
 
 /* Workaround to trick HLS loop unrolling */
 template<size_t NOBJ>
-ap_uint<1> comb_cond_partial(const size_t i, const ap_uint<1> matrix[max_requ][max_obj])
+ap_uint<1> comb_cond_partial(const size_t i, const ap_uint<1> matrix[MAX_REQ][MAX_OBJ])
 {
     ap_uint<1> result = false;
 
@@ -110,13 +110,13 @@ ap_uint<1> comb_cond_partial(const size_t i, const ap_uint<1> matrix[max_requ][m
 }
 
 template<typename T2, typename T3, size_t NREQU, size_t NOBJ>
-ap_uint<1> comb_cond(const T2 requirements[max_requ], const T3 objects[max_obj])
+ap_uint<1> comb_cond(const T2 requirements[MAX_REQ], const T3 objects[MAX_OBJ])
 {
 #pragma HLS ARRAY_PARTITION variable=requirements complete dim=0
 #pragma HLS ARRAY_PARTITION variable=objects complete dim=0
 
     ap_uint<1> result = false;
-    ap_uint<1> matrix[max_requ][max_obj];
+    ap_uint<1> matrix[MAX_REQ][MAX_OBJ];
 
     // calculate result matrix
     comp_requ_vs_obj<ap_uint<1>, T2, T3, NREQU, NOBJ>(matrix, requirements, objects);

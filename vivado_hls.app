@@ -1,20 +1,21 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="com.autoesl.autopilot.project" name="hls4gtl" top="algos">
-  <files>
-    <file name="../tb/algos_test_4_c_cosim.cpp" sc="0" tb="1" cflags=" -Wno-unknown-pragmas -Wno-unknown-pragmas -Wno-unknown-pragmas"/>
-    <file name="hls4gtl/src/templates.h" sc="0" tb="false" cflags=""/>
-    <file name="hls4gtl/src/requirements.h" sc="0" tb="false" cflags=""/>
-    <file name="hls4gtl/src/obj.h" sc="0" tb="false" cflags=""/>
-    <file name="hls4gtl/src/definitions.h" sc="0" tb="false" cflags=""/>
-    <file name="hls4gtl/src/algos.h" sc="0" tb="false" cflags=""/>
-    <file name="hls4gtl/src/algos.cpp" sc="0" tb="false" cflags=""/>
-  </files>
-  <solutions>
-    <solution name="solution1" status="active"/>
-  </solutions>
-  <includePaths/>
-  <libraryPaths/>
-  <Simulation>
-    <SimFlow askAgain="false" name="csim" clean="true" csimMode="0" lastCsimMode="0" compiler="true"/>
-  </Simulation>
+    <files>
+        <file name="hls4gtl/src/algos.cpp" sc="0" tb="false" cflags=""/>
+        <file name="hls4gtl/src/algos.h" sc="0" tb="false" cflags=""/>
+        <file name="hls4gtl/src/definitions.h" sc="0" tb="false" cflags=""/>
+        <file name="hls4gtl/src/obj.h" sc="0" tb="false" cflags=""/>
+        <file name="hls4gtl/src/requirements.h" sc="0" tb="false" cflags=""/>
+        <file name="hls4gtl/src/templates.h" sc="0" tb="false" cflags=""/>
+        <file name="../tb/algos_test.cpp" sc="0" tb="1" cflags=""/>
+        <file name="../tb/toolbox.h" sc="0" tb="1" cflags=""/>
+    </files>
+    <includePaths/>
+    <libraryPaths/>
+    <Simulation>
+        <SimFlow askAgain="false" name="csim" clean="true" csimMode="0" lastCsimMode="0" compiler="true"/>
+    </Simulation>
+    <solutions xmlns="">
+        <solution name="solution1" status="active"/>
+    </solutions>
 </project>
+
