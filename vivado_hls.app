@@ -7,7 +7,12 @@
         <file name="hls4gtl/src/requirements.h" sc="0" tb="false" cflags=""/>
         <file name="hls4gtl/src/templates.h" sc="0" tb="false" cflags=""/>
         <file name="../tb/algos_test.cpp" sc="0" tb="1" cflags=""/>
-        <file name="../tb/toolbox.h" sc="0" tb="1" cflags=""/>
+        <file name="../tb/byte_vector.h" sc="0" tb="1" cflags=""/>
+        <file name="../tb/hex_bytes.h" sc="0" tb="1" cflags=""/>
+        <file name="../tb/ostream_utils.cpp" sc="0" tb="1" cflags=""/>
+        <file name="../tb/ostream_utils.h" sc="0" tb="1" cflags=""/>
+        <file name="../tb/test_vector.cpp" sc="0" tb="1" cflags=""/>
+        <file name="../tb/test_vector.h" sc="0" tb="1" cflags=""/>
     </files>
     <includePaths/>
     <libraryPaths/>
