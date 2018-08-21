@@ -23,7 +23,7 @@ int main()
     eg_test[1].pt = 8;
     eg_test[2].pt = 6;
     eg_test[3].pt = 6;
-    eg_test[0].eta = -5;
+    eg_test[0].eta = 0x8D;
     eg_test[1].eta = 0;
     eg_test[2].eta = 0;
     eg_test[3].eta = 0;
@@ -52,14 +52,14 @@ int main()
             fprintf(fp, "0x0%04x\n", value);
             fprintf(fp, "[[/transaction]] \n");
 
-            eg_test[0].eta += 1;
-            eg_test[1].eta += 1;
-            jet_test[0].eta += 1;
+            eg_test[0].eta += 0x16;
+            eg_test[1].eta += 0x16;
+            jet_test[0].eta += 0x16;
 
             ++row;
         }
-        eg_test[0].eta = -5;
-        eg_test[1].eta = -4;
+        eg_test[0].eta = 0x8D;
+        eg_test[1].eta = 0xA4;
         jet_test[0].eta = 0;
         eg_test[0].pt += 5;
         eg_test[1].pt += 2;
