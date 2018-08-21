@@ -127,10 +127,21 @@ ap_uint<1> comb_cond(const T2 requirements[MAX_REQ], const T3 objects[MAX_OBJ])
         result |= comb_cond_partial<NOBJ>(i, matrix);
     }
 
-// Tried to implement a FF
-//    volatile ap_uint<1> temp;
-//    temp = result;
-//    return temp;
+    return result;
+}
+
+template<size_t NOBJ>
+ap_uint<1> comb_cond_and_or(const ap_uint<1> matrix[MAX_REQ][MAX_OBJ])
+{
+#pragma HLS ARRAY_PARTITION variable=matrix complete dim=0
+
+    ap_uint<1> result = false;
+
+    for (size_t i = 0; i < NOBJ; i++)
+    {
+#pragma HLS unroll
+        result |= comb_cond_partial<NOBJ>(i, matrix);
+    }
 
     return result;
 }
