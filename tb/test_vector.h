@@ -21,6 +21,7 @@ struct test_vector
     static const size_t tau_size = 12;
     static const size_t jet_size = 12;
     static const size_t other_size = 13;
+    static const size_t algorithm_size = 512;
 
     size_t bx;
 
@@ -30,6 +31,9 @@ struct test_vector
     jet_obj_t jet_obj[object_count] = {};
 
     byte_vector algorithms;
+    bool finor;
+
+    bool verbose = true;
 
     void load(const std::string& line);
 

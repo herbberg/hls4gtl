@@ -54,6 +54,7 @@ std::ostream& operator<<(std::ostream& os, const jet_obj_t& obj)
 {
     std::ostringstream oss;
     oss << std::hex << std::showbase;
+    oss << "<jet ";
     oss << "pt=" << obj.pt << ", ";
     oss << "eta=" << obj.eta << ">";
     os << oss.str();

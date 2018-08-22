@@ -83,7 +83,7 @@ int main()
             bool asim = ((output >> i) & 0x1);
             if (atv != asim)
             {
-                std::cerr << ">>> mismatch [algorithm #" << i << "]: ";
+                std::cerr << "mismatch> [algorithm #" << i << "]: ";
                 std::cerr << atv << "!=" << asim << " (tv/sim)\n";
             }
         }
