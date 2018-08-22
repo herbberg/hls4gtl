@@ -54,6 +54,7 @@ public:
 int main()
 {
     tb::test_vector input;
+    //input.verbose = false;
 
     // open test vector file
     std::ifstream tv(TEST_VECTOR_FILE);
@@ -64,6 +65,7 @@ int main()
     logger.log_header();
 
     size_t row = 0;
+    size_t mismatches = 0;
 
     for (std::string line; std::getline(tv, line); ++row)
     {
@@ -77,19 +79,25 @@ int main()
 
         std::cerr << "checking..." << std::endl;
 
-        for (size_t i = 0; i < input.algorithms.size_bits(); ++i)
+        for (size_t i = 0; i < N_ALGORITHMS; ++i)
         {
-            bool atv = input.algorithms.test(i);
-            bool asim = ((output >> i) & 0x1);
-            if (atv != asim)
+            const bool algorithm_tv = input.algorithms.test(i);
+            const bool algorithm_sim = ((output >> i) & 0x1);
+            if (algorithm_tv != algorithm_sim)
             {
-                std::cerr << "mismatch> [algorithm #" << i << "]: ";
-                std::cerr << atv << "!=" << asim << " (tv/sim)\n";
+                ++mismatches;
+                std::cerr << "*** mismatch> [algorithm #" << i << "]: ";
+                std::cerr << algorithm_tv << "!=" << algorithm_sim << " (tv/sim)\n";
             }
         }
 
         logger.log_sample(row, input, output);
     }
+
+    if (mismatches)
+        std::cerr << "*** " << mismatches << " mismatches" << std::endl;
+    else
+        std::cerr << "perfect match!" << std::endl;
 
     tv.close();
 }
