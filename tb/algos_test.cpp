@@ -1,67 +1,103 @@
-#include <stdio.h>
 #include "../src/requirements.h"
 #include "../src/algos.h"
 
-int main () {
+#include "test_vector.h"
+#include "ostream_utils.h"
 
-    const size_t ETA_SAMPLES=10;
-    const size_t PT_SAMPLES=5;
-    FILE *fp;
+#include <cstdio>
+#include <fstream>
+#include <sstream>
+#include <iostream>
 
-    int eg_pt_0_p,eg_eta_0_p,eg_pt_1_p,eg_eta_1_p,eg_pt_2_p;
-    int jet_pt_0_p,jet_eta_0_p;
-    ap_uint<n_algos>  output = 0;
-    size_t row = 0;
-    eg_obj_t eg_test[12] = {(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0)};
-    jet_obj_t jet_test[12] = {(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0)};
-//    obj_t eg_test[12] = {(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0)};
-//    obj_t jet_test[12] = {(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0)};
-    eg_test[0].pt = 9;
-    eg_test[1].pt = 8;
-    eg_test[2].pt = 6;
-    eg_test[0].eta = -5;
-    eg_test[1].eta = 0;
-    eg_test[2].eta = 0;
-    jet_test[0].pt = 9;
-    jet_test[0].eta = 0;
+static const std::string TEST_VECTOR_FILE = "../../../tb/TestVector_Sample.txt";
+static const std::string OUT_FILE = "algos_out.dat";
 
-    fp=fopen("algos_out.dat","w");
-    fprintf(fp,"trans  algos  eg0  eg0   eg1  eg1    eg2  jet0 jet0\n");
-    fprintf(fp,"action        pt   eta   pt   eta    pt   pt    eta\n");
-    fprintf(fp,"---------------------------------------------------\n");
-    for (size_t i=0;i<=PT_SAMPLES;i++) {
-        for (size_t j=0;j<=ETA_SAMPLES;j++) {
-
-            algos(eg_test, jet_test, output);
-
-            size_t o_p0 = output;
-            eg_pt_0_p = eg_test[0].pt;
-            eg_eta_0_p = eg_test[0].eta;
-            eg_pt_1_p = eg_test[1].pt;
-            eg_pt_2_p = eg_test[2].pt;
-            eg_eta_1_p = eg_test[1].eta;
-            jet_pt_0_p = jet_test[0].pt;
-            jet_eta_0_p = jet_test[0].eta;
-
-            fprintf(fp,"   %3d  %04x  %3d  %3d   %3d  %3d    %3d   %3d  %3d\n",
-            row,o_p0,
-            eg_pt_0_p,eg_eta_0_p,eg_pt_1_p,eg_eta_1_p,eg_pt_2_p,
-            jet_pt_0_p,jet_eta_0_p);
-
-            eg_test[0].eta++;
-            eg_test[1].eta++;
-            jet_test[0].eta++;
-            o_p0 = 0;
-            row++;
-        }
-        eg_test[0].eta = -5;
-        eg_test[1].eta = -4;
-        jet_test[0].eta = 0;
-        eg_test[0].pt = eg_test[0].pt + 5;
-        eg_test[1].pt = eg_test[1].pt + 2;
-        eg_test[2].pt = eg_test[2].pt + 1;
-        jet_test[0].pt++;
+class Logger
+{
+protected:
+    FILE* fp = nullptr;
+public:
+    Logger(const std::string& filename)
+    {
+        fp = fopen(filename.c_str(), "w");
     }
-    fclose(fp);
+    virtual ~Logger()
+    {
+        fclose(fp);
+    }
+    void log_header()
+    {
+        fprintf(fp, "trans  algos  eg0  eg0   eg1  eg1    eg2  jet0 jet0\n");
+        fprintf(fp, "action        pt   eta   pt   eta    pt   pt    eta\n");
+        fprintf(fp, "---------------------------------------------------\n");
+    }
+    void log_footer()
+    {
+        fprintf(fp, "---------------------------------------------------\n");
+    }
+    void log_sample(size_t row, const tb::test_vector& input, const ap_uint<N_ALGORITHMS>& output)
+    {
+        fprintf(fp, "   %3d  %04x  %3d  %3d   %3d  %3d    %3d   %3d  %3d\n",
+            row,
+            static_cast<unsigned>(output),
+            static_cast<unsigned>(input.egamma_obj[0].pt),
+            static_cast<unsigned>(input.egamma_obj[0].eta),
+            static_cast<unsigned>(input.egamma_obj[1].pt),
+            static_cast<unsigned>(input.egamma_obj[1].eta),
+            static_cast<unsigned>(input.egamma_obj[2].pt),
+            static_cast<unsigned>(input.jet_obj[0].pt),
+            static_cast<unsigned>(input.jet_obj[0].eta)
+        );
+    }
+};
 
+int main()
+{
+    tb::test_vector input;
+    //input.verbose = false;
+
+    // open test vector file
+    std::ifstream tv(TEST_VECTOR_FILE);
+
+    std::cerr << "writing output to " << OUT_FILE << std::endl;
+
+    Logger logger(OUT_FILE);
+    logger.log_header();
+
+    size_t row = 0;
+    size_t mismatches = 0;
+
+    for (std::string line; std::getline(tv, line); ++row)
+    {
+        input.load(line);
+
+        ap_uint<N_ALGORITHMS> output = 0;
+
+        std::cerr << "processing..." << std::endl;
+
+        algos(input.egamma_obj, input.jet_obj, output);
+
+        std::cerr << "checking..." << std::endl;
+
+        for (size_t i = 0; i < N_ALGORITHMS; ++i)
+        {
+            const bool algorithm_tv = input.algorithms.test(i);
+            const bool algorithm_sim = ((output >> i) & 0x1);
+            if (algorithm_tv != algorithm_sim)
+            {
+                ++mismatches;
+                std::cerr << "*** mismatch> [algorithm #" << i << "]: ";
+                std::cerr << algorithm_tv << "!=" << algorithm_sim << " (tv/sim)\n";
+            }
+        }
+
+        logger.log_sample(row, input, output);
+    }
+
+    if (mismatches)
+        std::cerr << "*** " << mismatches << " mismatches" << std::endl;
+    else
+        std::cerr << "perfect match!" << std::endl;
+
+    tv.close();
 }

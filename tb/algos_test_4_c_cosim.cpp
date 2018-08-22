@@ -1,7 +1,7 @@
 #include "../src/requirements.h"
 #include "../src/algos.h"
 
-#include <stdio.h>
+#include "transaction_writer.h"
 
 int main()
 {
@@ -31,32 +31,27 @@ int main()
     jet_test[0].eta = 0;
 
     // create fake test vector
-    FILE *fp;
-    fp = fopen("algos_out_4_c_cosim.dat", "w");
-    fprintf(fp, "[[[runtime]]]\n");
+    tb::transaction_writer writer("algos_out_4_c_cosim.dat");
 
-    size_t row = 0;
+    // set transcation value format
+    writer.set_format("0x0%04x");
 
     for (size_t i = 0; i < PT_SAMPLES; ++i)
     {
         for (size_t j = 0; j < ETA_SAMPLES; ++j)
         {
-            ap_uint<n_algos> output = 0;
+            ap_uint<N_ALGORITHMS> output = 0;
             algos(eg_test, jet_test, output);
 
             // type cast from ap_uint to size_t
             size_t value = static_cast<size_t>(output);
 
             // dump test vector transaction
-            fprintf(fp, "[[transaction]] %d\n", row);
-            fprintf(fp, "0x0%04x\n", value);
-            fprintf(fp, "[[/transaction]] \n");
+            writer.append(value);
 
             eg_test[0].eta += 0x16;
             eg_test[1].eta += 0x16;
             jet_test[0].eta += 0x16;
-
-            ++row;
         }
         eg_test[0].eta = 0x8D;
         eg_test[1].eta = 0xA4;
@@ -67,9 +62,4 @@ int main()
         eg_test[3].pt += 1;
         jet_test[0].pt += 1;
     }
-
-    // close fake test vector
-    fprintf(fp, "[[[/runtime]]]\n");
-    fclose(fp);
-
 }
