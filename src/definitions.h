@@ -7,4 +7,7 @@ const size_t N_ALGORITHMS = 5;
 const size_t MAX_OBJ = 12;
 const size_t MAX_REQ = 4;
 
+
+const size_t ORBIT_BX_SIZE = 3564;
+
 #endif
