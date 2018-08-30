@@ -1,6 +1,9 @@
 #include "algos.h"
 
-#include "../impl/hls/logic.h"
+#include "definitions.h"
+#include "obj.h"
+
+#include "current_dist.h"
 
 void algos (const eg_obj_t eg[MAX_OBJ], const jet_obj_t jet[MAX_OBJ], ap_uint<N_ALGORITHMS>& algo)
 {
@@ -11,6 +14,17 @@ void algos (const eg_obj_t eg[MAX_OBJ], const jet_obj_t jet[MAX_OBJ], ap_uint<N_
 #pragma HLS ARRAY_PARTITION variable=eg complete dim=1
 #pragma HLS ARRAY_PARTITION variable=jet complete dim=1
 
-    static ::impl::logic logic = {};
-    logic.process(eg, jet, algo);
+    ::impl::logic logic = {};
+
+    ::impl::logic::signal_type seeds[N_ALGORITHMS];
+#pragma HLS ARRAY_PARTITION variable=seeds complete dim=1
+
+    logic.process(eg, jet, seeds);
+
+    algo = 0;
+    for (size_t i = 0; i < N_ALGORITHMS; ++i)
+    {
+#pragma HLS UNROLL
+        algo |= static_cast<ap_uint<N_ALGORITHMS> >(seeds[i]) << i;
+    }
 }
