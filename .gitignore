@@ -8,5 +8,6 @@
 # Solutions
 /solution*
 
-# menu implementation
-/impl
+# menu distribution
+/dist
+/current_dist
