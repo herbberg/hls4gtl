@@ -31,6 +31,8 @@ class Distribution(object):
         hls_dir = os.path.join(templates_dir, 'hls')
         vhdl_dir = os.path.join(templates_dir, 'vhdl')
         self.engine = TemplateEngine([hls_dir, vhdl_dir])
+        self.proc = sys.argv[0]
+        self.timestamp = datetime.datetime.now().isoformat().rsplit('.', 1)[0]
         self.menu_name = os.path.basename(filename)
 
     def dist_dir(self, path, *args):
@@ -49,9 +51,11 @@ class Distribution(object):
     def write_template(self, template, filename, data):
         with open(filename, 'w') as fp:
             if not 'header_timestamp' in data:
-                data['header_timestamp'] = datetime.datetime.now().isoformat()
+                data['header_timestamp'] = self.timestamp
             if not 'header_menu_name' in data:
                 data['header_menu_name'] = self.menu_name
+            if not 'header_proc' is data:
+                data['header_proc'] = self.proc
             content = self.engine.render(template, data)
             fp.write(content)
 
