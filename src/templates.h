@@ -6,25 +6,9 @@
 #include "definitions.h"
 
 template<typename T1, typename T2>
-ap_uint<1> comp_all(const T1& requ, const T2& obj)
-{
-#pragma HLS INTERFACE ap_ctrl_none port=return
-#pragma HLS ARRAY_PARTITION variable=requ complete dim=0
-#pragma HLS ARRAY_PARTITION variable=obj complete dim=0
-
-    ap_uint<1> comp_eta = eta_comp_template(requ, obj);
-    ap_uint<1> comp_pt = pt_comp_template(requ, obj);
-
-    return comp_eta and comp_pt;
-
-}
-
-template<typename T1, typename T2>
 ap_uint<1> pt_comp_template(const T1& requ, const T2& obj)
 {
 #pragma HLS INTERFACE ap_ctrl_none port=return
-#pragma HLS ARRAY_PARTITION variable=requ complete dim=0
-#pragma HLS ARRAY_PARTITION variable=obj complete dim=0
 
     ap_uint<1> pt_c = 0;
 
@@ -37,8 +21,6 @@ template<typename T1, typename T2>
 ap_uint<1> eta_comp_template(const T1& requ, const T2& obj)
 {
 #pragma HLS INTERFACE ap_ctrl_none port=return
-#pragma HLS ARRAY_PARTITION variable=requ complete dim=0
-#pragma HLS ARRAY_PARTITION variable=obj complete dim=0
 
     ap_uint<1> eta_c = 0;
 
@@ -51,6 +33,7 @@ ap_uint<1> eta_comp_template(const T1& requ, const T2& obj)
         for (size_t i = 0; i < ETA_WINDOWS; i++)
         {
 #pragma HLS unroll
+#pragma HLS ARRAY_PARTITION variable=requ.eta complete dim=0
             if (obj.eta <= requ.eta[i].upper and obj.eta >= requ.eta[i].lower and i <= requ.n_eta-1)
             {
                 eta_c = 1;
@@ -58,6 +41,18 @@ ap_uint<1> eta_comp_template(const T1& requ, const T2& obj)
         }
     }
     return eta_c;
+}
+
+template<typename T1, typename T2>
+ap_uint<1> comp_all(const T1& requ, const T2& obj)
+{
+#pragma HLS INTERFACE ap_ctrl_none port=return
+
+    ap_uint<1> comp_eta = eta_comp_template(requ, obj);
+    ap_uint<1> comp_pt = pt_comp_template(requ, obj);
+
+    return comp_eta and comp_pt;
+
 }
 
 template<typename T, size_t X, size_t Y>

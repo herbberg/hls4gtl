@@ -2,10 +2,10 @@
  * auto generated menu implementation
  */
 
-#ifndef impl_const_h
-#define impl_const_h
+#ifndef impl_cuts_h
+#define impl_cuts_h
 
-#include "../src/obj.h"
+#include "../../src/obj.h"
 
 namespace impl {
 
