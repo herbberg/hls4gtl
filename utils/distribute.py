@@ -104,7 +104,10 @@ class SeedHelper(object):
         for k,v in self.Operators.iteritems():
             expr = re.sub(r'([\)\(\s])({})([\(\s])'.format(k), r'\1{}\3'.format(v), expr)
         # replace condition names
-        expr = re.sub(r'([\w_]+_i\d+)', r'{}.\1'.format(self.condition_namespace), expr)
+        def condition_rename(match):
+            name = snakecase(match.group(1))
+            return "{}.{}".format(self.condition_namespace, name)
+        expr = re.sub(r'([\w_]+_i\d+)', condition_rename, expr)
         return expr
 
 def filter_hex(value, width=0):
