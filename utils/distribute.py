@@ -1,33 +1,51 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from jinja2 import Environment, FileSystemLoader
-from jinja2 import filters, StrictUndefined
-
 import tmGrammar
 import tmEventSetup
 
+from jinja2 import Environment, FileSystemLoader
+from jinja2 import filters, StrictUndefined
+
+from collections import OrderedDict
 import argparse
 import datetime
 import shutil
 import re
 import sys, os
 
-CustomFilters = {
-    'hex': lambda value: format(value, '04x')
-}
+__version__ = '0.0.1'
+
+RegexCamelSnake1=re.compile(r'([^_])([A-Z][a-z]+)')
+RegexCamelSnake2=re.compile(r'([a-z0-9])([A-Z])')
+
+def snakecase(label, separator='_'):
+    """Transformes camel case label to spaced lower case (snaked) label.
+    >>> snakecase('CamelCaseLabel')
+    'camel_case_label'
+    """
+    subbed = RegexCamelSnake1.sub(r'\1{sep}\2'.format(sep=separator), label)
+    return RegexCamelSnake2.sub(r'\1{sep}\2'.format(sep=separator), subbed).lower()
+
+def c_init_list(*args, **kwargs):
+    """Returns C99 compliant initalizer list for C99 arrays and C99 structs."""
+    values = []
+    for arg in args:
+        values.append(format(arg))
+    for k, v in kwargs.iteritems():
+        values.append('.{}={}'.format(k, v))
+    return '{{{}}}'.format(', '.join([value for value in values]))
 
 class Range(object):
+    """Range object with C99 compliant initalizer list string representation."""
+    c_format = '0x{:04x}'
     def __init__(self, minimum, maximum):
         self.minimum = minimum
         self.maximum = maximum
     def __str__(self):
-        return "{{0x{minimum:04x}, 0x{maximum:04x}}}".format(**vars(self))
-
-class Array(list):
-    def __str__(self):
-        values = [format(value) for value in self]
-        return "{{{}}}".format(", ".join(values))
+        minimum = self.c_format.format(self.minimum)
+        maximum = self.c_format.format(self.maximum)
+        return c_init_list(minimum, maximum)
 
 class ObjectHelper(object):
     Types = {
@@ -38,8 +56,8 @@ class ObjectHelper(object):
         self.type = self.Types[handle.getType()]
         self.threshold = 0
         self.slice = Range(0, 12)
-        self.eta = Array()
-        self.phi = Array()
+        self.eta = []
+        self.phi = []
         for cut in handle.getCuts():
             type_ = cut.getCutType()
             if type_ == tmEventSetup.Threshold:
@@ -50,7 +68,6 @@ class ObjectHelper(object):
                 self.eta.append(Range(cut.getMinimum().index, cut.getMaximum().index))
             elif type_ == tmEventSetup.Phi:
                 self.phi.append(Range(cut.getMinimum().index, cut.getMaximum().index))
-
 
 class ConditionHelper(object):
     Types = {
@@ -64,7 +81,7 @@ class ConditionHelper(object):
         tmEventSetup.QuadJet: 'comb_cond',
     }
     def __init__(self, handle):
-        self.name = handle.getName()
+        self.name = snakecase(handle.getName())
         self.type = self.Types[handle.getType()]
         self.objects = []
         for object_ in handle.getObjects():
@@ -80,7 +97,7 @@ class SeedHelper(object):
     condition_namespace = 'cl'
     def __init__(self, handle):
         self.index = handle.getIndex()
-        self.name = handle.getName()
+        self.name = snakecase(handle.getName())
         self.expression = self.__format_expr(handle.getExpressionInCondition())
     def __format_expr(self, expr):
         # replace operators
@@ -89,6 +106,15 @@ class SeedHelper(object):
         # replace condition names
         expr = re.sub(r'([\w_]+_i\d+)', r'{}.\1'.format(self.condition_namespace), expr)
         return expr
+
+def filter_hex(value, width=0):
+    """C99 compliant hex value."""
+    return '0x{0:0{1}x}'.format(value, width)
+
+CustomFilters = {
+    'hex': filter_hex,
+    'init_list': lambda iterable: c_init_list(*iterable),
+}
 
 class TemplateEngine(object):
     """Custom tempalte engine class."""
@@ -138,10 +164,14 @@ class Distribution(object):
 
     def write_template(self, template, filename, data):
         with open(filename, 'w') as fp:
-            data['header_timestamp'] = self.timestamp
-            data['header_menu_name'] = self.menu.getName()
-            data['header_proc'] = self.proc
-            data['menu'] = self.menu,
+            data.update(dict(
+                header=dict(
+                    proc=dict(name=self.proc, version=__version__),
+                    timestamp=self.timestamp,
+                    menu=self.menu.getName(),
+                    module=0,
+                )
+            ))
             content = self.engine.render(template, data)
             fp.write(content)
 
