@@ -9,6 +9,7 @@
 #include "templates.h"
 
 // Includes menu distribution from symbolic link `current_dist`.
-#include "../current_dist/hls/module_0/src/impl/logic.hxx"
+#include "../current_dist/hls/module_0/src/impl/conditions.hxx"
+#include "../current_dist/hls/module_0/src/impl/seeds.hxx"
 
 #endif

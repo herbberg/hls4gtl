@@ -23,7 +23,7 @@ typedef ap_uint<4> muon_qual_t;
 typedef ap_uint<2> muon_iso_t;
 typedef ap_uint<2> muon_charge_t;
 
-typedef ap_uint<2> n_requ_t;
+typedef ap_uint<2> n_cuts_t;
 typedef ap_uint<4> n_obj_t;
 
 
@@ -58,27 +58,27 @@ struct muon_obj_t {
 };
 
 struct calo_eta_win_t {
-    calo_eta_t upper;
     calo_eta_t lower;
+    calo_eta_t upper;
 };
 
 struct calo_phi_win_t {
-    calo_phi_t upper;
     calo_phi_t lower;
+    calo_phi_t upper;
 };
 
 struct muon_eta_win_t {
-    muon_eta_t upper;
     muon_eta_t lower;
+    muon_eta_t upper;
 };
 
 struct muon_phi_win_t {
-    muon_phi_t upper;
     muon_phi_t lower;
+    muon_phi_t upper;
 };
 
 struct eg_obj_requ_t {
-    n_requ_t n_requ;
+    n_cuts_t n_cuts;
     n_obj_t n_obj;
     eg_pt_t pt;
     calo_eta_win_t eta[ETA_WINDOWS];
@@ -89,7 +89,7 @@ struct eg_obj_requ_t {
 };
 
 struct jet_obj_requ_t {
-    n_requ_t n_requ;
+    n_cuts_t n_cuts;
     n_obj_t n_obj;
     jet_pt_t pt;
     calo_eta_win_t eta[ETA_WINDOWS];
@@ -99,7 +99,7 @@ struct jet_obj_requ_t {
 };
 
 struct tau_obj_requ_t {
-    n_requ_t n_requ;
+    n_cuts_t n_cuts;
     n_obj_t n_obj;
     tau_pt_t pt;
     calo_eta_win_t eta[ETA_WINDOWS];
@@ -110,7 +110,7 @@ struct tau_obj_requ_t {
 };
 
 struct muon_obj_requ_t {
-    n_requ_t n_requ;
+    n_cuts_t n_cuts;
     n_obj_t n_obj;
     muon_phi_win_t phi[PHI_WINDOWS];
     ap_uint<2> n_phi;
