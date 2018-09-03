@@ -23,7 +23,7 @@ typedef ap_uint<4> muon_qual_t;
 typedef ap_uint<2> muon_iso_t;
 typedef ap_uint<2> muon_charge_t;
 
-typedef ap_uint<2> n_requ_t;
+typedef ap_uint<2> n_req_t;
 typedef ap_uint<4> n_obj_t;
 
 
@@ -77,8 +77,8 @@ struct muon_phi_win_t {
     muon_phi_t lower;
 };
 
-struct eg_obj_requ_t {
-    n_requ_t n_requ;
+struct eg_obj_req_t {
+    n_req_t n_req;
     n_obj_t n_obj;
     eg_pt_t pt;
     calo_eta_win_t eta[ETA_WINDOWS];
@@ -88,8 +88,8 @@ struct eg_obj_requ_t {
 //    eg_iso_t iso;
 };
 
-struct jet_obj_requ_t {
-    n_requ_t n_requ;
+struct jet_obj_req_t {
+    n_req_t n_req;
     n_obj_t n_obj;
     jet_pt_t pt;
     calo_eta_win_t eta[ETA_WINDOWS];
@@ -98,8 +98,8 @@ struct jet_obj_requ_t {
     ap_int<2> n_phi;
 };
 
-struct tau_obj_requ_t {
-    n_requ_t n_requ;
+struct tau_obj_req_t {
+    n_req_t n_req;
     n_obj_t n_obj;
     tau_pt_t pt;
     calo_eta_win_t eta[ETA_WINDOWS];
@@ -109,8 +109,8 @@ struct tau_obj_requ_t {
 //    tau_iso_t iso;
 };
 
-struct muon_obj_requ_t {
-    n_requ_t n_requ;
+struct muon_obj_req_t {
+    n_req_t n_req;
     n_obj_t n_obj;
     muon_phi_win_t phi[PHI_WINDOWS];
     ap_uint<2> n_phi;

@@ -6,43 +6,43 @@
 #include "definitions.h"
 
 template<typename T1, typename T2>
-ap_uint<1> comp_all(const T1& requ, const T2& obj)
+ap_uint<1> comp_all(const T1& req, const T2& obj)
 {
 #pragma HLS INTERFACE ap_ctrl_none port=return
-#pragma HLS ARRAY_PARTITION variable=requ complete dim=0
+#pragma HLS ARRAY_PARTITION variable=req complete dim=0
 #pragma HLS ARRAY_PARTITION variable=obj complete dim=0
 
-    ap_uint<1> comp_eta = eta_comp_template(requ, obj);
-    ap_uint<1> comp_pt = pt_comp_template(requ, obj);
+    ap_uint<1> comp_eta = eta_comp_template(req, obj);
+    ap_uint<1> comp_pt = pt_comp_template(req, obj);
 
     return comp_eta and comp_pt;
 
 }
 
 template<typename T1, typename T2>
-ap_uint<1> pt_comp_template(const T1& requ, const T2& obj)
+ap_uint<1> pt_comp_template(const T1& req, const T2& obj)
 {
 #pragma HLS INTERFACE ap_ctrl_none port=return
-#pragma HLS ARRAY_PARTITION variable=requ complete dim=0
+#pragma HLS ARRAY_PARTITION variable=req complete dim=0
 #pragma HLS ARRAY_PARTITION variable=obj complete dim=0
 
     ap_uint<1> pt_c = 0;
 
-    pt_c = obj.pt >= requ.pt;
+    pt_c = obj.pt >= req.pt;
 
     return pt_c;
 }
 
 template<typename T1, typename T2>
-ap_uint<1> eta_comp_template(const T1& requ, const T2& obj)
+ap_uint<1> eta_comp_template(const T1& req, const T2& obj)
 {
 #pragma HLS INTERFACE ap_ctrl_none port=return
-#pragma HLS ARRAY_PARTITION variable=requ complete dim=0
+#pragma HLS ARRAY_PARTITION variable=req complete dim=0
 #pragma HLS ARRAY_PARTITION variable=obj complete dim=0
 
     ap_uint<1> eta_c = 0;
 
-    if (requ.n_eta == 0)
+    if (req.n_eta == 0)
     {
         eta_c = 1;
     }
@@ -51,7 +51,7 @@ ap_uint<1> eta_comp_template(const T1& requ, const T2& obj)
         for (size_t i = 0; i < ETA_WINDOWS; i++)
         {
 #pragma HLS unroll
-            if (obj.eta <= requ.eta[i].upper and obj.eta >= requ.eta[i].lower and i <= requ.n_eta-1)
+            if (obj.eta <= req.eta[i].upper and obj.eta >= req.eta[i].lower and i <= req.n_eta-1)
             {
                 eta_c = 1;
             }
@@ -70,14 +70,14 @@ void init_2d(T data[X][Y], const T value)
             data[i][j] = value;
 }
 
-template<typename T1, typename T2, typename T3, size_t NREQU, size_t NOBJ>
-void comp_requ_vs_obj(T1 data[MAX_REQ][MAX_OBJ], const T2 requirements[MAX_REQ], const T3 objects[MAX_OBJ])
+template<typename T1, typename T2, typename T3, size_t NREQ, size_t NOBJ>
+void comp_req_vs_obj(T1 data[MAX_REQ][MAX_OBJ], const T2 requirements[MAX_REQ], const T3 objects[MAX_OBJ])
 {
 #pragma HLS ARRAY_PARTITION variable=requirements complete dim=0
 #pragma HLS ARRAY_PARTITION variable=objects complete dim=0
 #pragma HLS ARRAY_PARTITION variable=data complete dim=0
     init_2d<ap_uint<1>, MAX_REQ, MAX_OBJ>(data, 0x1);
-    for (size_t i = 0; i < NREQU; i++)
+    for (size_t i = 0; i < NREQ; i++)
 #pragma HLS unroll
         for (size_t j = 0; j < NOBJ; j++)
 #pragma HLS unroll
@@ -109,7 +109,7 @@ ap_uint<1> comb_cond_partial(const size_t i, const ap_uint<1> matrix[MAX_REQ][MA
     return result;
 }
 
-template<typename T2, typename T3, size_t NREQU, size_t NOBJ>
+template<typename T2, typename T3, size_t NREQ, size_t NOBJ>
 ap_uint<1> comb_cond(const T2 requirements[MAX_REQ], const T3 objects[MAX_OBJ])
 {
 #pragma HLS ARRAY_PARTITION variable=requirements complete dim=0
@@ -119,7 +119,7 @@ ap_uint<1> comb_cond(const T2 requirements[MAX_REQ], const T3 objects[MAX_OBJ])
     ap_uint<1> matrix[MAX_REQ][MAX_OBJ];
 
     // calculate result matrix
-    comp_requ_vs_obj<ap_uint<1>, T2, T3, NREQU, NOBJ>(matrix, requirements, objects);
+    comp_req_vs_obj<ap_uint<1>, T2, T3, NREQ, NOBJ>(matrix, requirements, objects);
 
     for (size_t i = 0; i < NOBJ; i++)
     {
