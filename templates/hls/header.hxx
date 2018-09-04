@@ -4,6 +4,7 @@
  * created: {{ meta.timestamp }}
  * menu name: {{ module.menu.name }}
  * menu UUID: {{ module.menu.uuid }}
+ * dist UUID: {{ module.menu.dist_uuid }}
  * module: {{ module.id }}
  *
  */
