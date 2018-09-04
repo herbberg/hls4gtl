@@ -42,6 +42,6 @@ Generated directory structure:
         │       └── module_...
         └── L1Menu_...
 
-### Run test bench with test vector
+### Simulate with test vector
 
-Assign a test vector path/filename to the csim argument list (argv).
+Append a test vector filename to the csim argument list (argv).
