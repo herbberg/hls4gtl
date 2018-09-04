@@ -22,6 +22,12 @@ void algos (const eg_obj_t eg[MAX_OBJ], const jet_obj_t jet[MAX_OBJ], ap_uint<1>
     // update seed states
     seeds_logic.process(conditions_logic);
 
+    for (size_t i = 0; i <N_ALGORITHMS; i++)
+    {
+#pragma HLS unroll
+    	algo[i] = 0;
+    }
+
     // map seed states to output
     seeds_logic.map(algo);
 
