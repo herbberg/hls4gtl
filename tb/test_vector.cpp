@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 
 namespace tb {
@@ -34,6 +35,11 @@ void test_vector::load_bx(std::istream& is)
 {
     is >> std::dec;
     is >> bx;
+
+    if (is.fail())
+    {
+        throw std::runtime_error("invalid data format");
+    }
 
     if (verbose)
         std::cerr << "<bx=" << bx << ">" << EOL;
@@ -138,6 +144,12 @@ byte_vector test_vector::next(std::istream& is)
 {
     std::string s;
     is >> s;
+
+    if (is.fail())
+    {
+        throw std::runtime_error("invalid data format");
+    }
+
     return byte_vector(s);
 }
 
