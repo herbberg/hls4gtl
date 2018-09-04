@@ -1,4 +1,5 @@
 #include "../src/algos.h"
+#include "../src/current_dist.h"
 
 #include "transaction_writer.h"
 
@@ -28,6 +29,11 @@ int main()
     eg_test[3].eta = 0;
     jet_test[0].pt = 9;
     jet_test[0].eta = 0;
+
+    // Dump menu information
+    std::cerr << "menu name: " << IMPL_MENU_NAME << std::endl;
+    std::cerr << "menu UUID: " << IMPL_MENU_UUID << std::endl;
+    std::cerr << "dist UUID: " << IMPL_DIST_UUID << std::endl;
 
     // create fake test vector
     tb::transaction_writer writer("algos_out_4_c_cosim.dat");
