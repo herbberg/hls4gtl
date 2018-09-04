@@ -45,14 +45,14 @@ int main()
     {
         for (size_t j = 0; j < ETA_SAMPLES; ++j)
         {
-            ap_uint<N_ALGORITHMS> output = 0;
+            ap_uint<1> output[N_ALGORITHMS] = {};
             algos(eg_test, jet_test, output);
 
             // type cast from ap_uint to size_t
-            size_t value = static_cast<size_t>(output);
+//            size_t value = static_cast<size_t>(output);
 
             // dump test vector transaction
-            writer.append(value);
+//            writer.append(value);
 
             eg_test[0].eta += 0x16;
             eg_test[1].eta += 0x16;
