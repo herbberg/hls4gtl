@@ -1,5 +1,14 @@
 {% extends "header.vhd" %}
 {% block code %}
+-- Description:
+-- Package for constants depending on L1Menu.
+
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+use work.gt_mp7_core_pkg.all;
+
+package constants_pkg is
 -- Module ID
 constant MODULE_ID : integer := {{ module.id|int }};
 
@@ -38,4 +47,6 @@ constant USED_ALGOS : used_algos_array := (
 {%- endfor %}
     others => false
 );
+
+end package;
 {% endblock code %}

@@ -241,7 +241,7 @@ class Distribution(object):
         self.write_template(template, filename, data)
 
     def write_constants(self, path):
-        template = 'ugt_constants.vhd'
+        template = 'constants_pkg.vhd'
         filename = self.vhdl_dir(path, template)
         data = {
             'seeds': self.seeds,
