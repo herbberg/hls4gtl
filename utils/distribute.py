@@ -7,11 +7,15 @@ import tmEventSetup
 from jinja2 import Environment, FileSystemLoader
 from jinja2 import filters, StrictUndefined
 
+from binascii import hexlify
 from collections import OrderedDict
+from distutils.version import StrictVersion
+
 import argparse
 import datetime
 import shutil
 import re
+import uuid
 import sys, os
 
 __version__ = '0.0.1'
@@ -26,6 +30,17 @@ def snakecase(label, separator='_'):
     """
     subbed = RegexCamelSnake1.sub(r'\1{sep}\2'.format(sep=separator), label)
     return RegexCamelSnake2.sub(r'\1{sep}\2'.format(sep=separator), subbed).lower()
+
+def hexstr(s, bytes):
+    chars = bytes * 2
+    return "{0:0>{1}}".format(hexlify(s[::-1]), chars)[-chars:]
+
+def uuid2hex(s):
+    return uuid.UUID(s).hex.lower()
+
+def murmurhash(s, bits=32):
+    """Returns Murmurhash signed integer."""
+    return tmEventSetup.getMmHashN(format(s))
 
 def c_init_list(*args, **kwargs):
     """Returns C99 compliant initalizer list for C99 arrays and C99 structs."""
@@ -70,15 +85,16 @@ class ObjectHelper(object):
                 self.phi.append(Range(cut.getMinimum().index, cut.getMaximum().index))
 
 class ConditionHelper(object):
+    CombCondition = 'comb_cond'
     Types = {
-        tmEventSetup.SingleEgamma: 'comb_cond',
-        tmEventSetup.DoubleEgamma: 'comb_cond',
-        tmEventSetup.TripleEgamma: 'comb_cond',
-        tmEventSetup.QuadEgamma: 'comb_cond',
-        tmEventSetup.SingleJet: 'comb_cond',
-        tmEventSetup.DoubleJet: 'comb_cond',
-        tmEventSetup.TripleJet: 'comb_cond',
-        tmEventSetup.QuadJet: 'comb_cond',
+        tmEventSetup.SingleEgamma: CombCondition,
+        tmEventSetup.DoubleEgamma: CombCondition,
+        tmEventSetup.TripleEgamma: CombCondition,
+        tmEventSetup.QuadEgamma: CombCondition,
+        tmEventSetup.SingleJet: CombCondition,
+        tmEventSetup.DoubleJet: CombCondition,
+        tmEventSetup.TripleJet: CombCondition,
+        tmEventSetup.QuadJet: CombCondition,
     }
     def __init__(self, handle):
         self.name = snakecase(handle.getName())
@@ -110,13 +126,22 @@ class SeedHelper(object):
         expr = re.sub(r'([\w_]+_i\d+)', condition_rename, expr)
         return expr
 
-def filter_hex(value, width=0):
+def c_hex(value, width=0):
     """C99 compliant hex value."""
     return '0x{0:0{1}x}'.format(value, width)
 
+def v_hex(value, width=0):
+    """Raw hex value."""
+    return '{0:0{1}x}'.format(value, width)
+
 CustomFilters = {
-    'hex': filter_hex,
-    'init_list': lambda iterable: c_init_list(*iterable),
+    'c_hex': c_hex,
+    'c_init_list': lambda iterable: c_init_list(*iterable),
+    'hex': v_hex,
+    'hexstr': hexstr,
+    'hexuuid': uuid2hex,
+    'vhdl_bool': lambda b: ('false', 'true')[bool(b)],
+    'mmhashn': murmurhash,
 }
 
 class TemplateEngine(object):
@@ -152,9 +177,13 @@ class Distribution(object):
         self.seeds.sort(key=lambda seed: seed.index)
 
 
-    def dist_dir(self, path, *args):
+    def hls_dir(self, path, *args):
         filename = os.path.join(*args) if len(args) else ''
         return os.path.join(path, 'hls', 'module_0', 'src', 'impl', filename)
+
+    def vhdl_dir(self, path, *args):
+        filename = os.path.join(*args) if len(args) else ''
+        return os.path.join(path, 'vhdl', 'module_0', 'src', filename)
 
     def create_dirs(self, path, force):
         if os.path.isdir(path):
@@ -163,24 +192,32 @@ class Distribution(object):
             else:
                 raise RuntimeError("Distribution directory already exists: {}".format(path))
         if not os.path.isdir(path):
-            os.makedirs(self.dist_dir(path))
+            os.makedirs(self.hls_dir(path))
+            os.makedirs(self.vhdl_dir(path))
 
     def write_template(self, template, filename, data):
         with open(filename, 'w') as fp:
-            data.update(dict(
-                header=dict(
-                    proc=dict(name=self.proc, version=__version__),
+            base = dict(
+                meta=dict(
+                    proc=dict(name=self.proc, version=StrictVersion(__version__)),
                     timestamp=self.timestamp,
-                    menu=self.menu.getName(),
-                    module=0,
+                    ),
+                module=dict(
+                    id=0,
+                    menu=dict(
+                        name=self.menu.getName(),
+                        uuid=self.menu.getMenuUuid(),
+                        dist_uuid=self.menu.getFirmwareUuid(),
+                    ),
                 )
-            ))
-            content = self.engine.render(template, data)
+            )
+            base.update(data)
+            content = self.engine.render(template, base)
             fp.write(content)
 
     def write_cuts(self, path):
         template = 'cuts.hxx'
-        filename = self.dist_dir(path, template)
+        filename = self.hls_dir(path, template)
         data = {
             'conditions': self.conditions
         }
@@ -188,7 +225,7 @@ class Distribution(object):
 
     def write_conditions(self, path):
         template = 'conditions.hxx'
-        filename = self.dist_dir(path, template)
+        filename = self.hls_dir(path, template)
         data = {
             'conditions': self.conditions
         }
@@ -196,10 +233,18 @@ class Distribution(object):
 
     def write_logic(self, path):
         template = 'seeds.hxx'
-        filename = self.dist_dir(path, template)
+        filename = self.hls_dir(path, template)
         data = {
             'seeds': self.seeds,
             'condition_namespace': SeedHelper.condition_namespace
+        }
+        self.write_template(template, filename, data)
+
+    def write_constants(self, path):
+        template = 'ugt_constants.vhd'
+        filename = self.vhdl_dir(path, template)
+        data = {
+            'seeds': self.seeds,
         }
         self.write_template(template, filename, data)
 
@@ -218,6 +263,7 @@ class Distribution(object):
         self.write_cuts(path)
         self.write_conditions(path)
         self.write_logic(path)
+        self.write_constants(path)
         self.write_symlink(path, 'current_dist')
 
 

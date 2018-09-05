@@ -1,4 +1,5 @@
 #include "../src/algos.h"
+#include "../src/current_dist.h"
 
 #include "test_vector.h"
 #include "ostream_utils.h"
@@ -11,57 +12,20 @@
 static const std::string TEST_VECTOR_FILE = "../../../tb/TestVector_Sample.txt";
 static const std::string OUT_FILE = "algos_out.dat";
 
-class Logger
+int main(int argc, char* argv[])
 {
-protected:
-    FILE* fp = nullptr;
-public:
-    Logger(const std::string& filename)
-    {
-        fp = fopen(filename.c_str(), "w");
-    }
-    virtual ~Logger()
-    {
-        fclose(fp);
-    }
-    void log_header()
-    {
-        fprintf(fp, "trans  algos  eg0  eg0   eg1  eg1    eg2  jet0 jet0\n");
-        fprintf(fp, "action        pt   eta   pt   eta    pt   pt    eta\n");
-        fprintf(fp, "---------------------------------------------------\n");
-    }
-    void log_footer()
-    {
-        fprintf(fp, "---------------------------------------------------\n");
-    }
-    void log_sample(size_t row, const tb::test_vector& input, const ap_uint<N_ALGORITHMS>& output)
-    {
-        fprintf(fp, "   %3d  %04x  %3d  %3d   %3d  %3d    %3d   %3d  %3d\n",
-            row,
-            static_cast<unsigned>(output),
-            static_cast<unsigned>(input.egamma_obj[0].pt),
-            static_cast<unsigned>(input.egamma_obj[0].eta),
-            static_cast<unsigned>(input.egamma_obj[1].pt),
-            static_cast<unsigned>(input.egamma_obj[1].eta),
-            static_cast<unsigned>(input.egamma_obj[2].pt),
-            static_cast<unsigned>(input.jet_obj[0].pt),
-            static_cast<unsigned>(input.jet_obj[0].eta)
-        );
-    }
-};
+    // Dump menu information
+    std::cerr << "> menu name: " << IMPL_MENU_NAME << std::endl;
+    std::cerr << "> menu UUID: " << IMPL_MENU_UUID << std::endl;
+    std::cerr << "> dist UUID: " << IMPL_DIST_UUID << std::endl;
 
-int main()
-{
     tb::test_vector input;
     //input.verbose = false;
 
-    // open test vector file
-    std::ifstream tv(TEST_VECTOR_FILE);
+    // open test vector file, sef optional file using argv[1]
+    std::ifstream tv(argc > 1 ? argv[0] : TEST_VECTOR_FILE);
 
     std::cerr << "writing output to " << OUT_FILE << std::endl;
-
-    Logger logger(OUT_FILE);
-    logger.log_header();
 
     size_t row = 0;
     size_t mismatches = 0;
@@ -70,7 +34,7 @@ int main()
     {
         input.load(line);
 
-        ap_uint<N_ALGORITHMS> output = 0;
+        ap_uint<1> output[N_ALGORITHMS] = {};
 
         std::cerr << "processing..." << std::endl;
 
@@ -81,7 +45,7 @@ int main()
         for (size_t i = 0; i < N_ALGORITHMS; ++i)
         {
             const bool algorithm_tv = input.algorithms.test(i);
-            const bool algorithm_sim = ((output >> i) & 0x1);
+            const bool algorithm_sim = output[i];
             if (algorithm_tv != algorithm_sim)
             {
                 ++mismatches;
@@ -89,8 +53,6 @@ int main()
                 std::cerr << algorithm_tv << "!=" << algorithm_sim << " (tv/sim)\n";
             }
         }
-
-        logger.log_sample(row, input, output);
     }
 
     if (mismatches)

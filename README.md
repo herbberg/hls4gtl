@@ -26,12 +26,22 @@ Generated directory structure:
     ├── current_dist -> dist/L1Menu_sample
     └── dist
         ├── L1Menu_sample
-        │   └── hls
+        │   ├── hls
+        │   │   ├── module_0
+        │   │   │   └── src
+        │   │   │       └── impl
+        │   │   │           ├── .hxx
+        │   │   │           ├── conditions.hxx
+        │   │   │           ├── cuts.hxx
+        │   │   │           └── seeds.hxx
+        │   │   └── module_...
+        │   └── vhdl
         │       ├── module_0
         │       │   └── src
-        │       │       └── impl
-        │       │           ├── conditions.hxx
-        │       │           ├── cuts.hxx
-        │       │           └── seeds.hxx
-        │       └── ...
-        └── ...
+        │       │       └── ugt_constants.vhd
+        │       └── module_...
+        └── L1Menu_...
+
+### Simulate with test vector
+
+Append a test vector filename to the csim argument list (argv).
