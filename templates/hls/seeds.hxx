@@ -3,13 +3,9 @@
 #ifndef impl_seeds_h
 #define impl_seeds_h
 
-#include "./conditions.hxx"
+#include "../impl/conditions.hxx"
 
 #include <ap_int.h>
-
-#define IMPL_MENU_NAME "{{ module.menu.name }}"
-#define IMPL_MENU_UUID "{{ module.menu.uuid }}"
-#define IMPL_DIST_UUID "{{ module.menu.dist_uuid }}"
 
 namespace impl {
 namespace seeds {

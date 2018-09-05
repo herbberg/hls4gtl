@@ -5,10 +5,12 @@ Creating GTL with High Level Synthesis
 ### Usage
 
     $ git clone https://github.com/herbberg/hls4gtl.git
+    $ git checkout <branch/tag>
+    $ vivado_hls run_hls.tcl <testvector>
 
-Open the project directory using Vivado HLS.
+Open the project directory using Vivado HLS to inspect using the GUI.
 
-Default solution clock is 25ns.
+Default solution clock is 24ns.
 
 ### Implement a menu
 
@@ -23,24 +25,27 @@ the auto generated implementation headers into the design.
 Generated directory structure:
 
     hls4gtl
-    ├── current_dist -> dist/L1Menu_sample
+    ├── current_dist -> dist/L1Menu_sample-d1
     └── dist
-        ├── L1Menu_sample
-        │   ├── hls
-        │   │   ├── module_0
-        │   │   │   └── src
-        │   │   │       └── impl
-        │   │   │           ├── .hxx
-        │   │   │           ├── conditions.hxx
-        │   │   │           ├── cuts.hxx
-        │   │   │           └── seeds.hxx
-        │   │   └── module_...
-        │   └── vhdl
-        │       ├── module_0
-        │       │   └── src
-        │       │       └── ugt_constants.vhd
-        │       └── module_...
-        └── L1Menu_...
+        └── L1Menu_sample-d1
+            ├── hls
+            │   └── module_0
+            │       └── src
+            │           └── impl
+            │               ├── menu.hxx
+            │               ├── conditions.hxx
+            │               ├── cuts.hxx
+            │               └── seeds.hxx
+            ├── testvector
+            ├── vhdl
+            │   └── module_0
+            │       └── src
+            │           └── constants_pkg.vhd
+            │   
+            └── xml
+                └── L1Menu_sample-d1.xml
+
+
 
 ### Simulate with test vector
 

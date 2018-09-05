@@ -166,6 +166,7 @@ class Distribution(object):
         self.engine = TemplateEngine([hls_dir, vhdl_dir])
         self.proc = sys.argv[0]
         self.timestamp = datetime.datetime.now().isoformat().rsplit('.', 1)[0]
+        self.filename = filename
         self.menu = tmEventSetup.getTriggerMenu(filename)
         self.conditions = []
         for handle in self.menu.getConditionMapPtr().values():
@@ -185,6 +186,14 @@ class Distribution(object):
         filename = os.path.join(*args) if len(args) else ''
         return os.path.join(path, 'vhdl', 'module_0', 'src', filename)
 
+    def tv_dir(self, path, *args):
+        filename = os.path.join(*args) if len(args) else ''
+        return os.path.join(path, 'testvector', filename)
+
+    def xml_dir(self, path, *args):
+        filename = os.path.join(*args) if len(args) else ''
+        return os.path.join(path, 'xml', filename)
+
     def create_dirs(self, path, force):
         if os.path.isdir(path):
             if force:
@@ -194,21 +203,26 @@ class Distribution(object):
         if not os.path.isdir(path):
             os.makedirs(self.hls_dir(path))
             os.makedirs(self.vhdl_dir(path))
+            os.makedirs(self.tv_dir(path))
+            os.makedirs(self.xml_dir(path))
 
     def write_template(self, template, filename, data):
         with open(filename, 'w') as fp:
             base = dict(
                 meta=dict(
-                    proc=dict(name=self.proc, version=StrictVersion(__version__)),
-                    timestamp=self.timestamp,
+                    proc=dict(
+                        name=self.proc,
+                        version=StrictVersion(__version__)
                     ),
-                module=dict(
-                    id=0,
-                    menu=dict(
+                    timestamp=self.timestamp,
+                ),
+                menu=dict(
                         name=self.menu.getName(),
                         uuid=self.menu.getMenuUuid(),
                         dist_uuid=self.menu.getFirmwareUuid(),
-                    ),
+                ),
+                module=dict(
+                    id=0,
                 )
             )
             base.update(data)
@@ -231,13 +245,19 @@ class Distribution(object):
         }
         self.write_template(template, filename, data)
 
-    def write_logic(self, path):
+    def write_seeds(self, path):
         template = 'seeds.hxx'
         filename = self.hls_dir(path, template)
         data = {
             'seeds': self.seeds,
             'condition_namespace': SeedHelper.condition_namespace
         }
+        self.write_template(template, filename, data)
+
+    def write_menu(self, path):
+        template = 'menu.hxx'
+        filename = self.hls_dir(path, template)
+        data = {}
         self.write_template(template, filename, data)
 
     def write_constants(self, path):
@@ -248,6 +268,9 @@ class Distribution(object):
         }
         self.write_template(template, filename, data)
 
+    def write_xml(self, path, dist):
+        shutil.copyfile(self.filename, self.xml_dir(path, '{}-d{}.xml'.format(self.menu.getName(), dist)))
+
     def write_symlink(self, path, name):
         root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
         cwd = os.getcwd()
@@ -257,13 +280,15 @@ class Distribution(object):
         os.symlink(path, name)
         os.chdir(cwd)
 
-    def write_impl(self, path, force=False):
-        path = os.path.join(path, self.menu.getName())
+    def write_impl(self, path, dist, force=False):
+        path = os.path.join(path, '{}-d{}'.format(self.menu.getName(), dist))
         self.create_dirs(path, force)
         self.write_cuts(path)
         self.write_conditions(path)
-        self.write_logic(path)
+        self.write_seeds(path)
+        self.write_menu(path)
         self.write_constants(path)
+        self.write_xml(path, dist)
         self.write_symlink(path, 'current_dist')
 
 
@@ -273,6 +298,7 @@ def parse_args():
     default_output_dir = os.path.join(root_dir, 'dist')
     parser = argparse.ArgumentParser()
     parser.add_argument('filename', help="XML trigger menu")
+    parser.add_argument('-d', '--dist', type=int, default=1, metavar='<n>', help="distribution number")
     parser.add_argument('--templates', metavar='<dir>', default=default_templates_dir, help="template input directory")
     parser.add_argument('--output', metavar='<dir>', default=default_output_dir, help="distribution output directory")
     parser.add_argument('--force', action='store_true', help="force overwrite an exisiting distribution")
@@ -282,7 +308,7 @@ def main():
     args = parse_args()
 
     dist = Distribution(args.templates, args.filename)
-    dist.write_impl(args.output, args.force)
+    dist.write_impl(args.output, args.dist, args.force)
 
 if __name__ == '__main__':
     main()

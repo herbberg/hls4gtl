@@ -3,7 +3,7 @@
 #ifndef impl_conditions_h
 #define impl_conditions_h
 
-#include "./cuts.hxx"
+#include "../impl/cuts.hxx"
 
 namespace impl {
 namespace conditions {
