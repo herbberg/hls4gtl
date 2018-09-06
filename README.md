@@ -6,9 +6,12 @@ Creating GTL with High Level Synthesis
 
     $ git clone https://github.com/herbberg/hls4gtl.git
     $ git checkout <branch/tag>
-    $ vivado_hls run_hls.tcl <testvector>
+    $ ln -s /path/to/dist/<menu> current_dist
+    $ make
 
-Open the project directory using Vivado HLS to inspect using the GUI.
+To run individual parts of the simulation use the provided makefile targets:
+
+    $ make csim|csynth|codim|export
 
 Default solution clock is 24ns.
 
