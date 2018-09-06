@@ -6,9 +6,16 @@ Creating GTL with High Level Synthesis
 
     $ git clone https://github.com/herbberg/hls4gtl.git
     $ git checkout <branch/tag>
-    $ vivado_hls run_hls.tcl <testvector>
+    $ python manage.py init </path/to/menu/dist> <module_id>
+    $ make
 
-Open the project directory using Vivado HLS to inspect using the GUI.
+Use ```manage.py``` to handle linked module distribution (append ```--help``` for more information):
+
+    $ python manage.py init|status|clean [args...]
+
+Run individual makefile targets:
+
+    $ make csim|csynth|cosim|export|clean
 
 Default solution clock is 24ns.
 
