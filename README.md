@@ -9,7 +9,11 @@ Creating GTL with High Level Synthesis
     $ python manage.py init </path/to/menu/dist> <module_id>
     $ make
 
-Use ```manage.py``` to handle linked module distribution (append ```--help``` for more information):
+The generated symlink ```current_dist``` in the project root directory is the
+entry point for the auto generated HLS source files implementing a menu module.
+The symlink can be configured either manually, by external scripts or by
+using ```manage.py``` which provides also integrity checks on the linked
+distribution directory:
 
     $ python manage.py init|status|clean [args...]
 
@@ -17,43 +21,12 @@ Run individual makefile targets:
 
     $ make csim|csynth|cosim|export|clean
 
-Default solution clock is 24ns.
+### HLS directives
 
-### Implement a menu
+Additional HlS directives can be added in ```config/directives.tcl```
 
-Use ```distribute.py``` to generate a menu distribution/implementation.
+### Menu distributions
 
-    $ python utils/distribute.py L1Menu_sample.xml
+Use ```tm-distribute``` to create a distribution from an XML trigger menu.
 
-The script creates a symbolic link ```current_dist``` in the projects root
-directory pointing to the generated menu distribution. Use this path to include
-the auto generated implementation headers into the design.
-
-Generated directory structure:
-
-    hls4gtl
-    ├── current_dist -> dist/L1Menu_sample-d1
-    └── dist
-        └── L1Menu_sample-d1
-            ├── hls
-            │   └── module_0
-            │       └── src
-            │           └── impl
-            │               ├── menu.hxx
-            │               ├── conditions.hxx
-            │               ├── cuts.hxx
-            │               └── seeds.hxx
-            ├── testvector
-            ├── vhdl
-            │   └── module_0
-            │       └── src
-            │           └── constants_pkg.vhd
-            │   
-            └── xml
-                └── L1Menu_sample-d1.xml
-
-
-
-### Simulate with test vector
-
-Append a test vector filename to the csim argument list (argv).
+See also: https://github.com/arnobaer/tm-distribute/
