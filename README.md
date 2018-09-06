@@ -6,12 +6,16 @@ Creating GTL with High Level Synthesis
 
     $ git clone https://github.com/herbberg/hls4gtl.git
     $ git checkout <branch/tag>
-    $ ln -s /path/to/dist/<menu> current_dist
+    $ python manage.py init </path/to/menu/dist> <module_id>
     $ make
 
-To run individual parts of the simulation use the provided makefile targets:
+Use ```manage.py``` to handle linked module distribution (append ```--help``` for more information):
 
-    $ make csim|csynth|codim|export
+    $ python manage.py init|status|clean [args...]
+
+Run individual makefile targets:
+
+    $ make csim|csynth|cosim|export|clean
 
 Default solution clock is 24ns.
 
