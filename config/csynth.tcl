@@ -1,6 +1,7 @@
-source "./config/config.tcl"
+source {./config/config.tcl}
 
 open_project $project
 open_solution $solution
 
-csynth_design
+set options {}
+csynth_design $options

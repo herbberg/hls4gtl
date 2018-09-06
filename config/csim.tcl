@@ -1,6 +1,11 @@
-source "./config/config.tcl"
+source {./config/config.tcl}
 
 open_project $project
 open_solution $solution
 
-csim_design -O -clean -compiler gcc -argv $argv
+set compiler {gcc}
+set ldflags {}
+set cflags {-clean}
+
+set options {-compiler $$compiler -ldflags $$ldflags $$cflags}
+csim_design $options -argv $argv
