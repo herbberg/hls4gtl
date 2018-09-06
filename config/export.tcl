@@ -5,5 +5,4 @@ open_solution $solution
 
 set format {ip_catalog}
 
-set options {-format $$format}
-export_design $options
+export_design -format $format

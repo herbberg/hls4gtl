@@ -8,5 +8,4 @@ set rtl {vhdl}
 set tool {xsim}
 set ldflags {}
 
-set options {-trace_level $$trace_level -rtl $$rtl -tool $$tool -ldflags $$ldflags}
-cosim_design $options -argv $argv
+cosim_design -trace_level $trace_level -rtl $rtl -tool $tool -ldflags $ldflags -argv $argv

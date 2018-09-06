@@ -7,5 +7,4 @@ set compiler {gcc}
 set ldflags {}
 set cflags {-clean}
 
-set options {-compiler $$compiler -ldflags $$ldflags $$cflags}
-csim_design $options -argv $argv
+csim_design -compiler $compiler -ldflags $ldflags $cflags -argv $argv
