@@ -188,7 +188,7 @@ class Distribution(object):
 
     def tv_dir(self, path, *args):
         filename = os.path.join(*args) if len(args) else ''
-        return os.path.join(path, 'testvector', filename)
+        return os.path.join(path, 'testvectors', filename)
 
     def xml_dir(self, path, *args):
         filename = os.path.join(*args) if len(args) else ''
