@@ -3,7 +3,7 @@
 config_dir = config
 project = hls_impl
 
-hlx = vivado_hls_2018.2
+hlx = vivado_hls
 remove = rm -rf
 
 .PHONY: all csim csynth cosim export
