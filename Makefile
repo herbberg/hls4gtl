@@ -1,34 +1,26 @@
 # HLS makefile
 
-config_dir = config
-dist_dir = current_dist
-project = hls_impl
-
-hlx = vivado_hls
+manage = python manage.py
 remove = rm -rf
 
 .PHONY: all csim csynth cosim export clean
 
 all: export
 
-$(project): $(dist_dir)
-	$(hlx) $(config_dir)/create_project.tcl
+csim:
+	$(manage) $@
 
-csim: $(project)
-	$(hlx) $(config_dir)/$@.tcl
+csynth:
+	$(manage) $@
 
-csynth: $(project)
-	$(hlx) $(config_dir)/$@.tcl
+cosim:
+	$(manage) $@
 
-cosim: csim csynth
-	$(hlx) $(config_dir)/$@.tcl
-
-export: cosim
-	$(hlx) $(config_dir)/$@.tcl
+export:
+	$(manage) $@
 
 clean:
-	$(remove) $(project)
+	$(manage) $@
 
 distclean: clean
-	$(remove) $(dist_dir)
 	$(remove) *.log
