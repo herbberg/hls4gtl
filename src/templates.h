@@ -85,15 +85,15 @@ ap_uint<1> comb_cond_partial(const size_t i, const ap_uint<1> matrix[MAX_REQ][MA
 {
     ap_uint<1> result = false;
 
+    loop_j:
     for (size_t j = 0; j < NOBJ; j++)
     {
-#pragma HLS unroll
+        loop_k:
         for (size_t k = 0; k < NOBJ; k++)
         {
-#pragma HLS unroll
+            loop_l:
             for (size_t l = 0; l < NOBJ; l++)
             {
-#pragma HLS unroll
                 if (j != i and k != i and k != j and l != i and l != j and l != k)
                 {
                     result |= matrix[0][i] and matrix[1][j] and matrix[2][k] and matrix[3][l];

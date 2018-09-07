@@ -9,12 +9,15 @@
 #include <sstream>
 #include <iostream>
 
-static const std::string TEST_VECTOR_FILE = "../../../tb/TestVector_Sample.txt";
-static const std::string OUT_FILE = "algos_out.dat";
-
 int main(int argc, char* argv[])
 {
     std::vector<std::string> args(argv, argv + argc);
+
+    if (args.size() != 2)
+    {
+        std::cerr << "usage: " << args.at(0) << " <testvector>" << std::endl;
+        return EXIT_FAILURE;
+    }
 
     // Dump menu information
     std::cerr << "> menu name: " << IMPL_MENU_NAME << std::endl;
@@ -25,9 +28,15 @@ int main(int argc, char* argv[])
     input.verbose = false;
 
     // open test vector file, sef optional file using argv[1]
-    std::ifstream tv(args.size() > 1 ? args.at(1) : TEST_VECTOR_FILE);
+    const std::string filename = args.at(1);
+    std::ifstream tv(filename);
+    if (not tv.is_open())
+    {
+        std::cerr << "*** unable to read test vector from: " << filename << std::endl;
+        return EXIT_FAILURE;
+    }
 
-    std::cerr << "> writing output to: " << OUT_FILE << std::endl;
+    std::cerr << "> reading test vector from: " << filename << std::endl;
 
     size_t row = 0;
     size_t mismatches = 0;

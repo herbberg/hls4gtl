@@ -4,9 +4,11 @@
 .cproject
 .project
 .vivado*
+vivado_hls.log
 
-# Solutions
+# local solutions
 /solution*
+/hls_impl
 
 # menu distribution
 /dist
