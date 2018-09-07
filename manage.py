@@ -42,9 +42,12 @@ def integrity_check(path):
     return True
 
 def locate_testvectors(path):
-    """Returns list of found testvectors and number of events."""
+    """Returns list of found testvectors and number of events, path must point
+    to a distribution directory.
+    """
+    testvectors_dir = os.path.abspath(os.path.join(path, '..', '..', 'testvectors'))
     testvectors = []
-    for filename in glob(os.path.join(path, 'TestVector*.txt')):
+    for filename in glob(os.path.join(testvectors_dir, 'TestVector*.txt')):
         with open(filename) as fp:
             events = sum(1 for line in fp)
         testvectors.append((filename, events))
@@ -97,8 +100,7 @@ def cmd_status(args):
                 write("module: {}\n".format(module))
                 menu = basename(dirname(dirname((target_dir))))
                 write("menu: {}\n".format(menu))
-                testvectors_dir = os.path.join(target_dir, '..', '..', 'testvectors')
-                testvectors = locate_testvectors(testvectors_dir)
+                testvectors = locate_testvectors(target_dir)
                 if testvectors:
                     write("testvectors: {}\n".format(len(testvectors)))
                     for filename, events in testvectors:
@@ -120,7 +122,13 @@ def cmd_auto_create_project(args):
 def cmd_csim(args):
     cmd_auto_create_project(args)
     context='config/csim.tcl'
-    command = [args.vivado_hls, context]
+    testvectors =  args.testvector or []
+    # Look for test vectors...
+    if not testvectors:
+        dist_dir = os.readlink(args.current_dist)
+        for testvector, events in locate_testvectors(dist_dir):
+            testvectors.append(testvector)
+    command = [args.vivado_hls, context] + testvectors
     subprocess.check_call(command)
 
 def cmd_csynth(args):
@@ -163,12 +171,14 @@ def parse_args():
     status_parser.set_defaults(func=cmd_status)
 
     csim_parser = subparsers.add_parser('csim', help="run C simulation")
+    csim_parser.add_argument('--testvector', metavar='<file>', nargs='*', help="run with custom testvectors")
     csim_parser.set_defaults(func=cmd_csim)
 
     csynth_parser = subparsers.add_parser('csynth', help="run C synthesis")
     csynth_parser.set_defaults(func=cmd_csynth)
 
     cosim_parser = subparsers.add_parser('cosim', help="run co-simulation")
+    cosim_parser.add_argument('--testvector', metavar='<file>', nargs='*', help="run with custom testvectors")
     cosim_parser.set_defaults(func=cmd_cosim)
 
     export_parser = subparsers.add_parser('export', help="run export IP core")
