@@ -38,7 +38,7 @@ void test_vector::load_bx(std::istream& is)
 
     if (is.fail())
     {
-        throw std::runtime_error("invalid data format");
+        throw std::runtime_error("invalid test vector format");
     }
 
     if (verbose)

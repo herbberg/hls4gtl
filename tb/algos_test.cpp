@@ -6,29 +6,67 @@
 
 #include <cstdio>
 #include <fstream>
+#include <map>
 #include <sstream>
 #include <iostream>
 
+size_t run_testvector(const std::string& filename);
+
 int main(int argc, char* argv[])
 {
-    std::vector<std::string> args(argv, argv + argc);
-
-    if (args.size() != 2)
-    {
-        std::cerr << "usage: " << args.at(0) << " <testvector>" << std::endl;
-        return EXIT_FAILURE;
-    }
-
     // Dump menu information
     std::cerr << "> menu name: " << IMPL_MENU_NAME << std::endl;
     std::cerr << "> menu UUID: " << IMPL_MENU_UUID << std::endl;
     std::cerr << "> dist UUID: " << IMPL_DIST_UUID << std::endl;
 
+    // Collect command line arguments
+    std::vector<std::string> args(argv, argv + argc);
+
+    // Warning if no test vectors are supplied
+    if (args.size() < 2)
+    {
+        std::cerr << "[WARNING] no test vectors supplied!" << std::endl;
+        return EXIT_SUCCESS;
+    }
+
+    std::map<std::string, size_t> results;
+    size_t failed = 0;
+
+    for (size_t i = 1; i < args.size(); ++i)
+    {
+        const std::string& filename = args.at(i);
+        size_t result = run_testvector(filename);
+        results[filename] = result;
+        if (result)
+        {
+            ++failed;
+        }
+    }
+
+    for (std::map<std::string, size_t>::iterator it = results.begin(); it != results.end(); ++it)
+    {
+        const std::string state = it->second == 0 ? "SUCCESS" : "FAILED";
+        std::cerr << it->first << ": " << state << std::endl;
+    }
+
+    // Xilinx UG902, page 200: good test benches should return exit codes!
+
+    if (failed)
+    {
+        std::cerr << "*** " << failed << " tests failed in total." << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    std::cerr << "> perfect match!" << std::endl;
+    return EXIT_SUCCESS;
+}
+
+size_t run_testvector(const std::string& filename)
+{
     tb::test_vector input;
     input.verbose = false;
 
     // open test vector file, sef optional file using argv[1]
-    const std::string filename = args.at(1);
     std::ifstream tv(filename);
     if (not tv.is_open())
     {
@@ -84,14 +122,5 @@ int main(int argc, char* argv[])
 
     tv.close();
 
-    // Xilinx UG902, page 200: good test benches should return exit codes!
-
-    if (mismatches)
-    {
-        std::cerr << "*** " << mismatches << " total mismatch(es)" << std::endl;
-        return EXIT_FAILURE;
-    }
-
-    std::cerr << "> perfect match!" << std::endl;
-    return EXIT_SUCCESS;
+    return mismatches;
 }
