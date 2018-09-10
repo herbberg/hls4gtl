@@ -6,7 +6,7 @@ set_top $top
 add_files src/algos.cpp
 add_files -tb tb/algos_test.cpp
 add_files -tb tb/byte_vector.h
-add_files -tb tb/hex_bytes.h
+add_files -tb tb/bytelify.h
 add_files -tb tb/ostream_utils.cpp
 add_files -tb tb/ostream_utils.h
 add_files -tb tb/test_vector.cpp
