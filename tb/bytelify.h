@@ -1,6 +1,7 @@
-#ifndef tb_hex_bytes_h
-#define tb_hex_bytes_h
+#ifndef tb_bytelify_h
+#define tb_bytelify_h
 
+#include <cstddef>
 #include <iterator>
 #include <string>
 #include <vector>
@@ -9,12 +10,13 @@ namespace tb {
 
 /* Arbitrary hex string to byte vector.
  *
- * std::vector<uint8_t> v = hex_bytes<uint8_t>("deadbeef");
+ * std::string s = "deadbeef";
+ * std::vector<uint8_t> v = bytelify<uint16_t>(s.begin(), s.end());
  * // v = [0xbeef, 0xdead]
  *
  */
-template<typename T>
-std::vector<T> hex_bytes(const std::string::const_iterator& cbegin, const std::string::const_iterator& cend)
+template<typename T = uint8_t>
+std::vector<T> bytelify(const std::string::const_iterator& cbegin, const std::string::const_iterator& cend, size_t base = 16)
 {
     // Width in nibbles depending on type T
     static const size_t width = sizeof(T) * 2;
@@ -39,6 +41,18 @@ std::vector<T> hex_bytes(const std::string::const_iterator& cbegin, const std::s
     }
     return v;
 }
+
+/* Arbitrary hex string to byte vector.
+ *
+ * std::vector<uint8_t> v = bytelify<uint16_t>("deadbeef");
+ * // v = [0xbeef, 0xdead]
+ *
+ */
+ template<typename T = uint8_t>
+ std::vector<T> bytelify(const std::string& s, size_t base = 16)
+ {
+    return bytelify<T>(s.begin(), s.end(), base);
+ }
 
 } //namespace tb
 
