@@ -1,7 +1,7 @@
 #ifndef tb_byte_vector_h
 #define tb_byte_vector_h
 
-#include "hex_bytes.h"
+#include "bytelify.h"
 
 #include <cassert>
 #include <climits>
@@ -37,7 +37,7 @@ struct byte_vector
     /* Read byte vector from hex string. */
     void from_hex_str(const std::string& s)
     {
-        data = hex_bytes<data_type>(s.cbegin(), s.cend());
+        data = bytelify<data_type>(s.cbegin(), s.cend());
     }
 
     /* Extract bit slice from byte vector. */
