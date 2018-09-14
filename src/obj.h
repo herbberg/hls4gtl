@@ -31,20 +31,20 @@ typedef ap_uint<4> n_obj_t;
 struct eg_obj_t {
     eg_pt_t pt;
     calo_eta_t eta;
-//    calo_phi_t phi;
+   calo_phi_t phi;
 //    eg_iso_t iso;
 };
 
 struct jet_obj_t {
     jet_pt_t pt;
     calo_eta_t eta;
-//    calo_phi_t phi;
+   calo_phi_t phi;
 };
 
 struct tau_obj_t {
     tau_pt_t pt;
     calo_eta_t eta;
-//    calo_phi_t phi;
+   calo_phi_t phi;
 //    tau_iso_t iso;
 };
 
