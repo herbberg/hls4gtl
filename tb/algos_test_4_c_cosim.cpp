@@ -31,9 +31,9 @@ int main()
     jet_test[0].eta = 0;
 
     // Dump menu information
-    std::cerr << "> menu name: " << IMPL_MENU_NAME << std::endl;
-    std::cerr << "> menu UUID: " << IMPL_MENU_UUID << std::endl;
-    std::cerr << "> dist UUID: " << IMPL_DIST_UUID << std::endl;
+    std::cerr << "INFO: menu name: " << IMPL_MENU_NAME << std::endl;
+    std::cerr << "INFO: menu UUID: " << IMPL_MENU_UUID << std::endl;
+    std::cerr << "INFO: dist UUID: " << IMPL_DIST_UUID << std::endl;
 
     // create fake test vector
     tb::transaction_writer writer("algos_out_4_c_cosim.dat");
