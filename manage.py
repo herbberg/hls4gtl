@@ -8,19 +8,19 @@ import subprocess
 import sys, os
 
 class Default:
-    max_modules = 6
+    modules = 6
     current_dist = 'current_dist'
     vivado_hls = 'vivado_hls'
     project = 'hls_impl'
 
 class Status:
-    def __init__(self, label, value, style=None):
-        self.label = label
+    def __init__(self, name, value=False, style=None, hint=None):
+        self.name = name
         self.value = value
         self.style = style or ''
-        self.hint = ""
+        self.hint = hint or ''
     def __repr__(self):
-        return colorize(self.label, self.style)
+        return colorize(self.name, self.style)
 
 def colorize(text, style):
     """Colorize a text using TTY escape sequences.
@@ -44,6 +44,8 @@ def integrity_check(path):
 def locate_testvectors(path):
     """Returns list of found testvectors and number of events, path must point
     to a distribution directory.
+    >>> locate_testvectors('L1Menu_sample/')
+    [('TestVector_L1Menu_sample_a.txt', 3564), ('TestVector_L1Menu_sample_b.txt', 170)]
     """
     testvectors_dir = os.path.abspath(os.path.join(path, '..', '..', 'testvectors'))
     testvectors = []
@@ -84,33 +86,48 @@ def cmd_status(args):
     """Status command, shows integrity status of distribution symlink."""
     dirname = os.path.dirname
     basename = os.path.basename
-    write = sys.stdout.write
-    status = Status('NOT_CONFIGURED', False, style='1;33')
-    status.hint = "run {} init </path/to/dist> <module_id> to create a '{}' symlink.".format(__file__, args.current_dist)
+    status = Status(
+        name='NOT_CONFIGURED',
+        value=1,
+        style='1;33',
+        hint="run {} init </path/to/dist> <module_id> to create a '{}' symlink.".format(__file__, args.current_dist)
+    )
     if os.path.islink(args.current_dist):
         target_dir = os.readlink(args.current_dist)
-        status = Status('DEAD_SYMLINK', False, style='1;31')
-        status.hint = "check the {} symlink.".format(args.current_dist)
+        status = Status(
+            name='DEAD_SYMLINK',
+            value=2,
+            style='1;31',
+            hint="check the {} symlink.".format(args.current_dist)
+        )
         if os.path.exists(target_dir):
-            status = Status('INVALID_LOCATION', False, style='1;31')
+            status = Status(
+                name='INVALID_LOCATION',
+                value=3,
+                style='1;31'
+            )
             if integrity_check(target_dir):
-                status = Status('OK', True, style='1;32')
-                write("{}: {}\n".format(args.current_dist, target_dir))
-                module = basename(target_dir).split('_')[-1]
-                write("module: {}\n".format(module))
+                status = Status(
+                    name='OK',
+                    value=0,
+                    style='1;32'
+                )
+                logging.info("%s: %s", args.current_dist, target_dir)
+                module_id = basename(target_dir).split('_')[-1]
+                logging.info("module_id: %s", module_id)
                 menu = basename(dirname(dirname((target_dir))))
-                write("menu: {}\n".format(menu))
+                logging.info("menu: %s", menu)
                 testvectors = locate_testvectors(target_dir)
                 if testvectors:
-                    write("testvectors: {}\n".format(len(testvectors)))
+                    logging.info("testvectors: %s", len(testvectors))
                     for filename, events in testvectors:
-                        write(" - {} ({} events)\n".format(os.path.basename(filename), events))
+                        logging.info("* %s (%s events)", os.path.basename(filename), events)
                 else:
-                    write("testvectors: {}\n".format('none'))
+                    logging.info("testvectors: %s", 'n/a')
     # add some fancy colors
-    write("status: {} [{}]\n".format(status, status.value))
+    logging.info("status: %s", status)
     if status.hint:
-        write("hint: {}\n".format(status.hint))
+        logging.info("hint: %s", status.hint)
     return status.value
 
 def cmd_auto_create_project(args):
@@ -122,13 +139,18 @@ def cmd_auto_create_project(args):
 def cmd_csim(args):
     cmd_auto_create_project(args)
     context='config/csim.tcl'
-    testvectors =  args.testvector or []
+    testvectors = []
+    try: testvectors = args.testvector
+    except: pass
     # Look for test vectors...
     if not testvectors:
         dist_dir = os.readlink(args.current_dist)
         for testvector, events in locate_testvectors(dist_dir):
             testvectors.append(testvector)
-    command = [args.vivado_hls, context] + testvectors
+    if not testvectors:
+        logging.warning("running CSIM without testvectors (none available)")
+    command = [args.vivado_hls, context]
+    command.extend(testvectors)
     subprocess.check_call(command)
 
 def cmd_csynth(args):
@@ -158,7 +180,7 @@ def parse_args():
 
     init_parser = subparsers.add_parser('init', help="initialize with module distribution")
     init_parser.add_argument('dist', help="menu distribution directory")
-    init_parser.add_argument('module', type=int, help="module ID (0...{})".format(Default.max_modules-1))
+    init_parser.add_argument('module', type=int, help="module ID (0...{})".format(Default.modules-1))
     init_parser.set_defaults(func=cmd_init)
 
     reset_parser = subparsers.add_parser('reset', help="remove current module distribution")
@@ -171,14 +193,14 @@ def parse_args():
     status_parser.set_defaults(func=cmd_status)
 
     csim_parser = subparsers.add_parser('csim', help="run C simulation")
-    csim_parser.add_argument('--testvector', metavar='<file>', nargs='*', help="run with custom testvectors")
+    csim_parser.add_argument('--testvector', metavar='<file>', default=[], nargs='*', help="run with custom testvectors")
     csim_parser.set_defaults(func=cmd_csim)
 
     csynth_parser = subparsers.add_parser('csynth', help="run C synthesis")
     csynth_parser.set_defaults(func=cmd_csynth)
 
     cosim_parser = subparsers.add_parser('cosim', help="run co-simulation")
-    cosim_parser.add_argument('--testvector', metavar='<file>', nargs='*', help="run with custom testvectors")
+    cosim_parser.add_argument('--testvector', metavar='<file>', default=[], nargs='*', help="run with custom testvectors")
     cosim_parser.set_defaults(func=cmd_cosim)
 
     export_parser = subparsers.add_parser('export', help="run export IP core")
@@ -191,7 +213,7 @@ def parse_args():
 
 def main():
     args = parse_args()
-    logging.getLogger().setLevel(logging.INFO)
+    logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
     args.func(args)
     sys.exit()
 
