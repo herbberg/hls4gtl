@@ -5,14 +5,16 @@
 
 #include "current_dist.h"
 
-void algos(const eg_obj_t eg[MAX_OBJ], const jet_obj_t jet[MAX_OBJ], ap_uint<1> algo[N_ALGORITHMS])
+void algos(const in_data_t& in_data, ap_uint<1> algo[N_ALGORITHMS])
 {
-    // create static logic
+#pragma HLS INTERFACE ap_ctrl_none port=return
+
+	// create static logic
     static ::impl::conditions::logic conditions_logic = {};
     static ::impl::seeds::logic seeds_logic = {};
 
     // update condition states
-    conditions_logic.process(eg, jet);
+    conditions_logic.process(in_data);
 
     // update seed states
     seeds_logic.process(conditions_logic);
