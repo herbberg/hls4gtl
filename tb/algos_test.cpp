@@ -15,9 +15,9 @@ size_t run_testvector(const std::string& filename);
 int main(int argc, char* argv[])
 {
     // Dump menu information
-    std::cerr << "> menu name: " << IMPL_MENU_NAME << std::endl;
-    std::cerr << "> menu UUID: " << IMPL_MENU_UUID << std::endl;
-    std::cerr << "> dist UUID: " << IMPL_DIST_UUID << std::endl;
+    std::cerr << "INFO: menu name: " << IMPL_MENU_NAME << std::endl;
+    std::cerr << "INFO: menu UUID: " << IMPL_MENU_UUID << std::endl;
+    std::cerr << "INFO: dist UUID: " << IMPL_DIST_UUID << std::endl;
 
     // Collect command line arguments
     std::vector<std::string> args(argv, argv + argc);
@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
     // Warning if no test vectors are supplied
     if (args.size() < 2)
     {
-        std::cerr << "[WARNING] no test vectors supplied!" << std::endl;
+        std::cerr << "WARNING: no test vectors supplied!" << std::endl;
         return EXIT_SUCCESS;
     }
 
@@ -43,21 +43,22 @@ int main(int argc, char* argv[])
         }
     }
 
+    std::cerr << "INFO: summary:" << std::endl;
     for (std::map<std::string, size_t>::iterator it = results.begin(); it != results.end(); ++it)
     {
         const std::string state = it->second == 0 ? "SUCCESS" : "FAILED";
-        std::cerr << it->first << ": " << state << std::endl;
+        std::cerr << "INFO: " << it->first << ": " << state << std::endl;
     }
 
     // Xilinx UG902, page 200: good test benches should return exit codes!
 
     if (failed)
     {
-        std::cerr << "*** " << failed << " tests failed in total." << std::endl;
+        std::cerr << "ERROR: *** " << failed << " tests failed in total." << std::endl;
         return EXIT_FAILURE;
     }
 
-    std::cerr << "> perfect match!" << std::endl;
+    std::cerr << "INFO: passed test, perfect match!" << std::endl;
     return EXIT_SUCCESS;
 }
 
@@ -70,11 +71,11 @@ size_t run_testvector(const std::string& filename)
     std::ifstream tv(filename);
     if (not tv.is_open())
     {
-        std::cerr << "*** unable to read test vector from: " << filename << std::endl;
+        std::cerr << "ERROR: *** unable to read test vector from: " << filename << std::endl;
         return EXIT_FAILURE;
     }
 
-    std::cerr << "> reading test vector from: " << filename << std::endl;
+    std::cerr << "INFO: processing testvector '" << filename << "'" << std::endl;
 
     size_t row = 0;
     size_t mismatches = 0;
@@ -86,12 +87,12 @@ size_t run_testvector(const std::string& filename)
         ap_uint<1> output[N_ALGORITHMS] = {};
 
         if (input.verbose)
-            std::cerr << "> processing event " << input.bx << " ..." << std::endl;
+            std::cerr << "INFO: processing event " << input.bx << " ..." << std::endl;
 
         algos(input.egamma_obj, input.jet_obj, output);
 
         if (input.verbose)
-            std::cerr << "> checking event " << input.bx << " ..." << std::endl;
+            std::cerr << "INFO: checking event " << input.bx << " ..." << std::endl;
 
         size_t event_mismatches = 0;
 
@@ -102,7 +103,7 @@ size_t run_testvector(const std::string& filename)
             if (algorithm_tv != algorithm_sim)
             {
                 ++event_mismatches;
-                std::cerr << "*** mismatch> [event=" << input.bx << "] [algorithm=" << i << "]: ";
+                std::cerr << "ERROR: *** mismatch> [event=" << input.bx << "] [algorithm=" << i << "]: ";
                 std::cerr << algorithm_tv << "!=" << algorithm_sim << " (tv/sim)\n";
             }
         }
@@ -111,16 +112,21 @@ size_t run_testvector(const std::string& filename)
 
         if (event_mismatches)
         {
-            std::cerr << "*** " << event_mismatches << " mismatch(es) in event " << input.bx << "." << std::endl;
+            std::cerr << "ERROR: *** " << event_mismatches << " mismatch(es) in event " << input.bx << "." << std::endl;
         }
         else
         {
             if (input.verbose)
-                std::cerr << "> success." << std::endl;
+                std::cerr << "INFO: success." << std::endl;
         }
     }
 
     tv.close();
+
+    if (mismatches)
+        std::cerr << "ERROR: " << mismatches << "mismatches." << std::endl;
+    else
+        std::cerr << "INFO: success." << std::endl;
 
     return mismatches;
 }
