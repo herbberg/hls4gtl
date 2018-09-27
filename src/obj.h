@@ -9,7 +9,7 @@
 // objects type definition
 struct eg_obj_t {
     typedef ap_uint<9> pt_t;
-    typedef ap_uint<8> eta_t;
+    typedef ap_int<8> eta_t;
     typedef ap_uint<8> phi_t;
     typedef ap_uint<2> iso_t;
     pt_t pt;
@@ -20,7 +20,7 @@ struct eg_obj_t {
 
 struct jet_obj_t {
     typedef ap_uint<11> pt_t;
-    typedef ap_uint<8> eta_t;
+    typedef ap_int<8> eta_t;
     typedef ap_uint<8> phi_t;
     pt_t pt;
     eta_t eta;
@@ -29,7 +29,7 @@ struct jet_obj_t {
 
 struct tau_obj_t {
     typedef ap_uint<9> pt_t;
-    typedef ap_uint<8> eta_t;
+    typedef ap_int<8> eta_t;
     typedef ap_uint<8> phi_t;
     typedef ap_uint<2> iso_t;
     pt_t pt;
@@ -171,13 +171,13 @@ struct muon_obj_requ_t {
     
     n_cuts_t n_cuts;
     n_obj_t n_obj;
-    muon_phi_win_t phi[PHI_WINDOWS];
-    ap_uint<2> n_phi;
     muon_obj_t::pt_t pt;
-    ap_uint<1> qual_lut[QUAL_LUT_WIDTH];
     muon_eta_win_t eta[ETA_WINDOWS];
     ap_uint<3> n_eta;
+    muon_phi_win_t phi[PHI_WINDOWS];
+    ap_uint<2> n_phi;
     ap_uint<1> iso_lut[ISO_LUT_WIDTH];
+    ap_uint<1> qual_lut[QUAL_LUT_WIDTH];
     req_charge_t requested_charge;
     ap_uint<1> comp(const muon_obj_t& obj) const
     {
