@@ -13,8 +13,6 @@ namespace tb {
 
 struct test_vector
 {
-    static const size_t object_count = ::MAX_OBJ;
-
     // test vector format (might differ from actual object counts)
     static const size_t muon_size = 8;
     static const size_t egamma_size = 12;
@@ -25,10 +23,7 @@ struct test_vector
 
     size_t bx;
 
-    muon_obj_t muon_obj[8] = {};
-    eg_obj_t egamma_obj[object_count] = {};
-    tau_obj_t tau_obj[object_count] = {};
-    jet_obj_t jet_obj[object_count] = {};
+    in_data_t in_data = {};
 
     byte_vector algorithms;
     bool finor;
