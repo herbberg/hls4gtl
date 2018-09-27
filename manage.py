@@ -55,6 +55,18 @@ def locate_testvectors(path):
         testvectors.append((filename, events))
     return testvectors
 
+def check_call(args):
+    """Call system command, handles OSErrors (file not found)."""
+    try:
+        return subprocess.check_call(args)
+    except OSError as e:
+        # Catching error 2 (file not found).
+        # Usually occures if vivado is not sourced.
+        if e.errno == os.errno.ENOENT:
+            logging.error(format(e))
+            logging.error("executable '%s' not found", args[0])
+            sys.exit(1)
+
 def cmd_reset(args):
     """Reset command, removes distribution symlink."""
     if os.path.islink(args.current_dist):
@@ -134,7 +146,7 @@ def cmd_auto_create_project(args):
     if not os.path.isdir(Default.project):
         context='config/create_project.tcl'
         command = [args.vivado_hls, context]
-        subprocess.check_call(command)
+        check_call(command)
 
 def cmd_csim(args):
     cmd_auto_create_project(args)
@@ -151,13 +163,13 @@ def cmd_csim(args):
         logging.warning("running CSIM without testvectors (none available)")
     command = [args.vivado_hls, context]
     command.extend(testvectors)
-    subprocess.check_call(command)
+    check_call(command)
 
 def cmd_csynth(args):
     cmd_auto_create_project(args)
     context='config/csynth.tcl'
     command = [args.vivado_hls, context]
-    subprocess.check_call(command)
+    check_call(command)
 
 def cmd_cosim(args):
     cmd_auto_create_project(args)
@@ -165,14 +177,14 @@ def cmd_cosim(args):
     cmd_csynth(args)
     context='config/cosim.tcl'
     command = [args.vivado_hls, context]
-    subprocess.check_call(command)
+    check_call(command)
 
 def cmd_export(args):
     cmd_auto_create_project(args)
     cmd_cosim(args)
     context='config/export.tcl'
     command = [args.vivado_hls, context]
-    subprocess.check_call(command)
+    check_call(command)
 
 def parse_args():
     parser = argparse.ArgumentParser()
