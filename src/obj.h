@@ -100,7 +100,8 @@ struct eg_obj_requ_t {
     static const size_t PHI_WINDOWS = 2;
     static const size_t ISO_LUT_WIDTH = 4;
     n_cuts_t n_cuts;
-    n_obj_t n_obj;
+//     n_obj_t n_obj;
+    n_obj_t slice[2];
     eg_obj_t::pt_t pt;
     comparison_mode_t comparison_mode;
     calo_eta_win_t eta[ETA_WINDOWS];
@@ -122,7 +123,8 @@ struct jet_obj_requ_t {
     static const size_t ETA_WINDOWS = 5;
     static const size_t PHI_WINDOWS = 2;
     n_cuts_t n_cuts;
-    n_obj_t n_obj;
+//     n_obj_t n_obj;
+    n_obj_t slice[2];
     jet_obj_t::pt_t pt;
     comparison_mode_t comparison_mode;
     calo_eta_win_t eta[ETA_WINDOWS];
@@ -143,7 +145,8 @@ struct tau_obj_requ_t {
     static const size_t PHI_WINDOWS = 2;
     static const size_t ISO_LUT_WIDTH = 4;
     n_cuts_t n_cuts;
-    n_obj_t n_obj;
+//     n_obj_t n_obj;
+    n_obj_t slice[2];
     tau_obj_t::pt_t pt;
     comparison_mode_t comparison_mode;
     calo_eta_win_t eta[ETA_WINDOWS];
@@ -173,7 +176,8 @@ struct muon_obj_requ_t {
     };
     
     n_cuts_t n_cuts;
-    n_obj_t n_obj;
+//     n_obj_t n_obj;
+    n_obj_t slice[2];
     muon_obj_t::pt_t pt;
     comparison_mode_t comparison_mode;
     muon_eta_win_t eta[ETA_WINDOWS];
