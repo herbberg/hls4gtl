@@ -102,6 +102,7 @@ struct eg_obj_requ_t {
     n_cuts_t n_cuts;
     n_obj_t n_obj;
     eg_obj_t::pt_t pt;
+    comparison_mode_t comparison_mode;
     calo_eta_win_t eta[ETA_WINDOWS];
     ap_int<3> n_eta;
     calo_phi_win_t phi[PHI_WINDOWS];
@@ -123,6 +124,7 @@ struct jet_obj_requ_t {
     n_cuts_t n_cuts;
     n_obj_t n_obj;
     jet_obj_t::pt_t pt;
+    comparison_mode_t comparison_mode;
     calo_eta_win_t eta[ETA_WINDOWS];
     ap_int<3> n_eta;
     calo_phi_win_t phi[PHI_WINDOWS];
@@ -143,6 +145,7 @@ struct tau_obj_requ_t {
     n_cuts_t n_cuts;
     n_obj_t n_obj;
     tau_obj_t::pt_t pt;
+    comparison_mode_t comparison_mode;
     calo_eta_win_t eta[ETA_WINDOWS];
     ap_int<3> n_eta;
     calo_phi_win_t phi[PHI_WINDOWS];
@@ -172,6 +175,7 @@ struct muon_obj_requ_t {
     n_cuts_t n_cuts;
     n_obj_t n_obj;
     muon_obj_t::pt_t pt;
+    comparison_mode_t comparison_mode;
     muon_eta_win_t eta[ETA_WINDOWS];
     ap_uint<3> n_eta;
     muon_phi_win_t phi[PHI_WINDOWS];

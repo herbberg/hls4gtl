@@ -12,7 +12,18 @@ ap_uint<1> pt_comp_template(const T1& requ, const T2& obj)
 
     ap_uint<1> pt_c = 0;
 
-    pt_c = obj.pt >= requ.pt;
+    switch(requ.comparison_mode)
+    {
+        case GE: 
+            pt_c = obj.pt >= requ.pt;
+            break;
+        case EQ: 
+            pt_c = obj.pt == requ.pt;
+            break;
+        case NE: 
+            pt_c = obj.pt != requ.pt;
+            break;
+    }    
 
     return pt_c;
 }

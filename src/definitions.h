@@ -10,4 +10,10 @@ const size_t MAX_REQ = 4;
 
 const size_t ORBIT_BX_SIZE = 3564;
 
+enum comparison_mode_t {
+    GE,
+    NE,
+    EQ,
+};
+
 #endif
