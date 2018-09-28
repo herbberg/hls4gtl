@@ -55,19 +55,19 @@ struct muon_obj_t {
 
 typedef ap_uint<8> asym_t;
 typedef ap_uint<8> centrality_t;
-typedef ap_uint<256> extcond_t;
+typedef ap_uint<256> external_t;
 
 struct in_data_t {
     eg_obj_t eg[MAX_OBJ];
     jet_obj_t jet[MAX_OBJ];
     tau_obj_t tau[MAX_OBJ];
-    muon_obj_t muon[MAX_MUON_OBJ]; 
+    muon_obj_t muon[MAX_MUON_OBJ];
     asym_t asymet;
     asym_t asymht;
     asym_t asymethf;
     asym_t asymhthf;
     centrality_t centrality;
-    extcond_t extcond;
+    external_t external;
 };
 
 // requirements type definition
@@ -174,7 +174,7 @@ struct muon_obj_requ_t {
         POSITIVE,
         NEGATIVE
     };
-    
+
     n_cuts_t n_cuts;
 //     n_obj_t n_obj;
     n_obj_t slice[2];
@@ -196,6 +196,17 @@ struct muon_obj_requ_t {
         ap_uint<1> comp_iso = iso_lut[obj.iso];
         ap_uint<1> comp_charge = charge_comp_template(*this, obj);
         return comp_pt and comp_eta and comp_phi and comp_qual and comp_iso and comp_phi;
+    };
+};
+
+struct external_obj_requ_t
+{
+    typedef size_t channel_id_type;
+    channel_id_type channel_id;
+    template<typename T>
+    ap_uint<1> comp(const T& external) const
+    {
+        return (external >> channel_id) & 0x1;
     };
 };
 

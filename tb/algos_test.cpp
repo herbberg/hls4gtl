@@ -89,7 +89,7 @@ size_t run_testvector(const std::string& filename)
         if (input.verbose)
             std::cerr << "INFO: processing event " << input.bx << " ..." << std::endl;
 
-        algos(input.egamma_obj, input.jet_obj, output);
+        algos(input.in_data, output);
 
         if (input.verbose)
             std::cerr << "INFO: checking event " << input.bx << " ..." << std::endl;

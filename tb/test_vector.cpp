@@ -51,7 +51,7 @@ void test_vector::load_muons(std::istream& is)
     {
         byte_vector data = next(is);
 
-        auto& muon = muon_obj[i];
+        auto& muon = in_data.muon[i];
         muon.phi = data.slice(0, 9);
         muon.pt = data.slice(10, 18);
         muon.qual = data.slice(19, 22);
@@ -70,7 +70,7 @@ void test_vector::load_egammas(std::istream& is)
     {
         byte_vector data = next(is);
 
-        auto& egamma = egamma_obj[i];
+        auto& egamma = in_data.eg[i];
         egamma.pt = data.slice(0, 8);
         egamma.eta = data.slice(9, 16);
         // egamma.phi = data.slice(17, 24);
@@ -87,7 +87,7 @@ void test_vector::load_taus(std::istream& is)
     {
         byte_vector data = next(is);
 
-        auto& tau = tau_obj[i];
+        auto& tau = in_data.tau[i];
         tau.pt = data.slice(0, 8);
         tau.eta = data.slice(9, 16);
         // tau.phi = data.slice(17, 24);
@@ -104,7 +104,7 @@ void test_vector::load_jets(std::istream& is)
     {
         byte_vector data = next(is);
 
-        auto& jet = jet_obj[i];
+        auto& jet = in_data.jet[i];
         jet.pt = data.slice(0, 10);
         jet.eta = data.slice(11, 18);
         // jet.phi = data.slice(19, 26);
