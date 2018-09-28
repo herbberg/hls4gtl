@@ -53,9 +53,31 @@ struct muon_obj_t {
     charge_t charge;
 };
 
+// Generic signal type vector
+template<size_t N>
+struct signal_vector_t
+{
+    typedef size_t size_type;
+    typedef ap_uint<N> value_type;
+    typedef ap_uint<1> signal_type;
+
+    static const size_type size = N;
+
+    value_type value;
+
+    signal_type operator[](size_t pos) const
+    {
+        return (value >> static_cast<value_type>(pos)) & 0x1;
+    }
+};
+
+// Centrality signal vector
+typedef signal_vector_t<8> cent_t;
+
 typedef ap_uint<8> asym_t;
-typedef ap_uint<8> centrality_t;
-typedef ap_uint<256> external_t;
+
+// External signal vector
+typedef signal_vector_t<256> external_t;
 
 struct in_data_t {
     eg_obj_t eg[MAX_OBJ];
@@ -66,7 +88,7 @@ struct in_data_t {
     asym_t asymht;
     asym_t asymethf;
     asym_t asymhthf;
-    centrality_t centrality;
+    cent_t cent;
     external_t external;
 };
 
@@ -199,14 +221,29 @@ struct muon_obj_requ_t {
     };
 };
 
-struct external_obj_requ_t
+// Centrality cut
+struct cent_signal_requ_t
+{
+    typedef size_t signal_id_type;
+    signal_id_type signal_id;
+
+    template<typename T>
+    ap_uint<1> comp(const T& cent) const
+    {
+        return cent[signal_id];
+    };
+};
+
+// External signal cut
+struct external_signal_requ_t
 {
     typedef size_t channel_id_type;
     channel_id_type channel_id;
+
     template<typename T>
     ap_uint<1> comp(const T& external) const
     {
-        return (external >> channel_id) & 0x1;
+        return external[channel_id];
     };
 };
 

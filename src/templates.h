@@ -190,7 +190,14 @@ ap_uint<1> comb_cond(const T2 requirements[MAX_REQ], const T3 objects[MAX_OBJ])
     return result;
 }
 
-/* External condition */
+/* Centrality signal condition */
+template<typename T1, typename T2>
+ap_uint<1> cent_cond(const T1& requirement, const T2& cent)
+{
+    return requirement.comp(cent);
+}
+
+/* External signal condition */
 template<typename T1, typename T2>
 ap_uint<1> ext_cond(const T1& requirement, const T2& external)
 {
