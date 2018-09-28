@@ -6,7 +6,19 @@
 // definitions.
 #include "definitions.h"
 #include "obj.h"
-#include "templates.h"
+
+// Objects and signals
+#include "gtl/object/centrality.h"
+#include "gtl/object/external.h"
+
+// Cuts
+#include "gtl/cut/centrality.h"
+#include "gtl/cut/external.h"
+
+// Conditions
+#include "gtl/condition/signal.h"
+#include "gtl/condition/comb.h"
+
 
 // Includes menu distribution from symbolic link `current_dist`.
 #include "../current_dist/src/impl/menu.hxx"
