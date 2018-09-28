@@ -8,9 +8,9 @@
 
 std::ostream& operator<<(std::ostream& os, const tb::byte_vector& bv);
 
-std::ostream& operator<<(std::ostream& os, const muon_obj_t& jet);
-std::ostream& operator<<(std::ostream& os, const eg_obj_t& egamma);
-std::ostream& operator<<(std::ostream& os, const tau_obj_t& tau);
-std::ostream& operator<<(std::ostream& os, const jet_obj_t& jet);
+std::ostream& operator<<(std::ostream& os, const gtl::object::muon& object);
+std::ostream& operator<<(std::ostream& os, const gtl::object::eg& object);
+std::ostream& operator<<(std::ostream& os, const gtl::object::tau& object);
+std::ostream& operator<<(std::ostream& os, const gtl::object::jet& object);
 
 #endif

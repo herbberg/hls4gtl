@@ -7,17 +7,9 @@
 #include "definitions.h"
 #include "obj.h"
 
-// Objects and signals
-#include "gtl/object/centrality.h"
-#include "gtl/object/external.h"
-
-// Cuts
-#include "gtl/cut/centrality.h"
-#include "gtl/cut/external.h"
-
-// Conditions
-#include "gtl/condition/signal.h"
-#include "gtl/condition/comb.h"
+#include "gtl/object.h"
+#include "gtl/cut.h"
+#include "gtl/condition.h"
 
 
 // Includes menu distribution from symbolic link `current_dist`.

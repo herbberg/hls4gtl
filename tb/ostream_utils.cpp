@@ -13,50 +13,50 @@ std::ostream& operator<<(std::ostream& os, const tb::byte_vector& bv)
     return os;
 }
 
-std::ostream& operator<<(std::ostream& os, const muon_obj_t& obj)
+std::ostream& operator<<(std::ostream& os, const gtl::object::muon& object)
 {
     std::ostringstream oss;
     oss << std::hex << std::showbase;
     oss << "<muon ";
-    oss << "pt=" << obj.pt << ", ";
-    oss << "eta=" << obj.eta << ", ";
-    oss << "phi=" << obj.phi << ", ";
-    oss << "qual=" << obj.qual << ", ";
-    oss << "iso=" << obj.iso << ", ";
-    oss << "charge=" << obj.charge << ">";
+    oss << "pt=" << object.pt << ", ";
+    oss << "eta=" << object.eta << ", ";
+    oss << "phi=" << object.phi << ", ";
+    oss << "qual=" << object.qual << ", ";
+    oss << "iso=" << object.iso << ", ";
+    oss << "charge=" << object.charge << ">";
     os << oss.str();
     return os;
 }
 
-std::ostream& operator<<(std::ostream& os, const eg_obj_t& obj)
+std::ostream& operator<<(std::ostream& os, const gtl::object::eg& object)
 {
     std::ostringstream oss;
     oss << std::hex << std::showbase;
     oss << "<egamma ";
-    oss << "pt=" << obj.pt << ", ";
-    oss << "eta=" << obj.eta << ">";
+    oss << "pt=" << object.pt << ", ";
+    oss << "eta=" << object.eta << ">";
     os << oss.str();
     return os;
 }
 
-std::ostream& operator<<(std::ostream& os, const tau_obj_t& obj)
+std::ostream& operator<<(std::ostream& os, const gtl::object::tau& object)
 {
     std::ostringstream oss;
     oss << std::hex << std::showbase;
     oss << "<tau ";
-    oss << "pt=" << obj.pt << ", ";
-    oss << "eta=" << obj.eta << ">";
+    oss << "pt=" << object.pt << ", ";
+    oss << "eta=" << object.eta << ">";
     os << oss.str();
     return os;
 }
 
-std::ostream& operator<<(std::ostream& os, const jet_obj_t& obj)
+std::ostream& operator<<(std::ostream& os, const gtl::object::jet& object)
 {
     std::ostringstream oss;
     oss << std::hex << std::showbase;
     oss << "<jet ";
-    oss << "pt=" << obj.pt << ", ";
-    oss << "eta=" << obj.eta << ">";
+    oss << "pt=" << object.pt << ", ";
+    oss << "eta=" << object.eta << ">";
     os << oss.str();
     return os;
 }
