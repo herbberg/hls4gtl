@@ -8,6 +8,8 @@
 #include "../comparator/phi.h"
 #include "../comparator/charge.h"
 
+#include "../utils/range.h"
+
 #include "../../definitions.h"
 
 #include <cstddef>

@@ -1,7 +1,7 @@
 #ifndef ostream_formats_h
 #define ostream_formats_h
 
-#include "../src/obj.h"
+#include "../src/gtl/object.h"
 #include "byte_vector.h"
 
 #include <iostream>

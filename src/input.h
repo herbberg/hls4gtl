@@ -1,17 +1,15 @@
-#ifndef OBJ_H_
-#define OBJ_H_
+#ifndef gtl_input_h
+#define gtl_input_h
 
 #include <cstddef> // for size_t
 #include <ap_int.h>
 #include "definitions.h"
 
-#include "gtl/utils/range.h"
-
 #include "gtl/object.h"
 
 using namespace gtl;
 
-// objects type definition
+// TODO review
 
 struct in_data_t
 {

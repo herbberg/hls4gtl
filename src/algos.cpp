@@ -1,7 +1,7 @@
 #include "algos.h"
 
 #include "definitions.h"
-#include "obj.h"
+#include "input.h"
 
 #include "current_dist.h"
 
