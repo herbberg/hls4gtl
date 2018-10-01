@@ -2,7 +2,7 @@
 
 Creating GTL with High Level Synthesis
 
-### Usage
+## Usage
 
     $ git clone https://github.com/herbberg/hls4gtl.git
     $ git checkout <branch/tag>
@@ -38,3 +38,7 @@ Additional HlS directives can be added in ```config/directives.tcl```
 Use ```tm-distribute``` to create a distribution from an XML trigger menu.
 
 See also: https://github.com/arnobaer/tm-distribute/
+
+## Contributing
+
+If you want to help us improve CloudCompare or create a new plugin you can start by reading this [guide](CONTRIBUTING.md)
