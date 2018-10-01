@@ -2,6 +2,7 @@
 #define gtl_cut_asymmetry_h
 
 #include "../object/asymmetry.h"
+#include "../comparator/count.h"
 
 #include <cstddef>
 #include <ap_int.h>
@@ -13,7 +14,13 @@ struct asymmetry
 {
     typedef object::asymmetry object_type;
 
-    // TODO
+    object_type::count_type count;
+    comparison_mode_t comparison_mode;
+
+    ap_uint<1> comp(const object_type& object) const
+    {
+        return comparator::count(*this, object);        
+    };
 };
 
 } // namespace cut
