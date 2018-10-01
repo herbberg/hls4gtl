@@ -29,9 +29,11 @@ int main(int argc, char* argv[])
         return EXIT_SUCCESS;
     }
 
+    // Record results for every test vector
     std::map<std::string, size_t> results;
     size_t failed = 0;
 
+    // Process testvectors
     for (size_t i = 1; i < args.size(); ++i)
     {
         const std::string& filename = args.at(i);

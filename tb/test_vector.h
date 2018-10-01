@@ -2,7 +2,7 @@
 #define tb_test_vector_h
 
 #include "../src/definitions.h"
-#include "../src/obj.h"
+#include "../src/input.h"
 
 #include "byte_vector.h"
 
