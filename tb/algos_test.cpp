@@ -3,6 +3,7 @@
 
 #include "test_vector.h"
 #include "ostream_utils.h"
+#include "unittest.h"
 
 #include <cstdio>
 #include <fstream>
@@ -14,6 +15,10 @@ size_t run_testvector(const std::string& filename);
 
 int main(int argc, char* argv[])
 {
+    // Run unittests
+    std::cerr << "INFO: running unit tests..." << std::endl;
+    unittest::all();
+
     // Dump menu information
     std::cerr << "INFO: menu name: " << IMPL_MENU_NAME << std::endl;
     std::cerr << "INFO: menu UUID: " << IMPL_MENU_UUID << std::endl;
