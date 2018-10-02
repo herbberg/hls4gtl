@@ -3,7 +3,7 @@
 
 #include <cstddef>
 #include <ap_int.h>
-
+#include <iostream>
 namespace gtl {
 namespace utils {
 
@@ -21,8 +21,7 @@ struct signal_vector
 
     signal_type operator[](size_t pos) const
     {
-        const value_type mask = (0x1 << pos);
-        return value & mask;
+        return (value >> pos) & 0x1;
     }
 };
 
