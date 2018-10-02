@@ -4,6 +4,8 @@
 
 set_directive_interface -mode ap_none "algos" eg
 set_directive_interface -mode ap_none "algos" jet
+set_directive_interface -mode ap_none "algos" tau
+set_directive_interface -mode ap_none "algos" muon
 set_directive_interface -mode ap_none "algos" algo
 
 set_directive_interface -mode ap_ctrl_none "algos"
