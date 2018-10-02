@@ -32,13 +32,13 @@ struct pow<A, 0>
 template <size_t A>
 struct bitwidth
 {
-    static const size_t value = 1 + bitwidth<(A >> 1)>::value;
+    static const size_t value = (A > 1) + bitwidth<(A >> 1)>::value;
 };
 
 template <>
 struct bitwidth<0>
 {
-    static const size_t value = 0;
+    static const size_t value = 1;
 };
 
 } // namespace math
