@@ -1,7 +1,7 @@
-#ifndef gtl_cut_asymmetry_h
-#define gtl_cut_asymmetry_h
+#ifndef gtl_cut_minimumbias_h
+#define gtl_cut_minimumbias_h
 
-#include "../object/asymmetry.h"
+#include "../object/minimumbias.h"
 #include "../comparator/count.h"
 
 #include <cstddef>
@@ -10,9 +10,9 @@
 namespace gtl {
 namespace cut {
 
-struct asymmetry
+struct minimumbias
 {
-    typedef object::asymmetry object_type;
+    typedef object::minimumbias object_type;
 
     object_type::count_type count;
     comparison_mode_t comparison_mode;
