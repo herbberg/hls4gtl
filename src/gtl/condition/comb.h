@@ -36,14 +36,11 @@ ap_uint<1> comb_partial(const size_t i, const ap_uint<1> matrix[MAX_REQ][MAX_OBJ
 #pragma HLS INTERFACE ap_ctrl_none port=return
     ap_uint<1> result = false;
 
-    loop_j:
-    for (size_t j = SLICE_MIN; j <= SLICE_MAX; j++)
+    loop_j: for (size_t j = SLICE_MIN; j <= SLICE_MAX; j++)
     {
-        loop_k:
-        for (size_t k = SLICE_MIN; k <= SLICE_MAX; k++)
+        loop_k: for (size_t k = SLICE_MIN; k <= SLICE_MAX; k++)
         {
-            loop_l:
-            for (size_t l = SLICE_MIN; l <= SLICE_MAX; l++)
+            loop_l: for (size_t l = SLICE_MIN; l <= SLICE_MAX; l++)
             {
                 if (j != i and k != i and k != j and l != i and l != j and l != k)
                 {
@@ -69,7 +66,7 @@ ap_uint<1> comb(const T2 requirements[MAX_REQ], const T3 objects[MAX_OBJ])
     // calculate result matrix
     comb_matrix<ap_uint<1>, T2, T3, NREQ, SLICE_MIN, SLICE_MAX>(matrix, requirements, objects);
 
-    for (size_t i = SLICE_MIN; i <= SLICE_MAX; i++)
+    loop_i: for (size_t i = SLICE_MIN; i <= SLICE_MAX; i++)
     {
 #pragma HLS unroll
         result |= comb_partial<SLICE_MIN, SLICE_MAX>(i, matrix);
