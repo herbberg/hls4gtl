@@ -21,7 +21,7 @@ void algos(const in_data_t& in_data, ap_uint<1> algo[N_ALGORITHMS])
     // update seed states
     seeds_logic.process(conditions_logic);
 
-    loop_init: for (size_t i = 0; i <N_ALGORITHMS; i++)
+    for (size_t i = 0; i <N_ALGORITHMS; i++)
     {
 #pragma HLS UNROLL
         algo[i] = 0;
