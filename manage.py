@@ -75,21 +75,20 @@ def csynth_report(filename):
     doc = minidom.parse(filename)
     node = doc.getElementsByTagName('PerformanceEstimates')[0]
     items = [
-        'Best-caseLatency',
-        'Average-caseLatency',
-        'Worst-caseLatency',
-        'Interval-min',
-        'Interval-max',
-        'TripCount',
-        'Latency',
+        # XML tag, expected value
+        ['Best-caseLatency', 0],
+        ['Average-caseLatency', 0],
+        ['Worst-caseLatency', 0],
+        ['Interval-min', 1],
+        ['Interval-max', 1],
     ]
-    logging.info("Performance estimates report:")
+    logging.info("Latency report:")
     for item in items:
-        value = node.getElementsByTagName(item)[0].firstChild.nodeValue
-        context = logging.info
-        if int(value) > 0:
-            context = logging.warning
-        context("{}: {}".format(item, value))
+        value = node.getElementsByTagName(item[0])[0].firstChild.nodeValue
+        if int(value) != item[1]:
+            logging.warning("{}: {} [expected: {}]".format(item[0], value, item[1]))
+        else:
+            logging.info("{}: {}".format(item[0], value))
 
 def check_call(args):
     """Call system command, handles OSErrors (file not found)."""
