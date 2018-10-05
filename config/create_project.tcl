@@ -17,4 +17,3 @@ add_files -tb tb/unittest.h
 open_solution $solution
 set_part $part
 create_clock -period $clock_ns -name default
-source {./config/directives.tcl}

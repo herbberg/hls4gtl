@@ -23,8 +23,8 @@ ap_uint<1> phi(const T1& cut, const T2& object)
     {
         for (size_t i = 0; i < T1::PHI_WINDOWS; ++i)
         {
-#pragma HLS unroll
 #pragma HLS ARRAY_PARTITION variable=cut.phi complete dim=0
+#pragma HLS UNROLL
 
             if (i < cut.n_phi)
             {
