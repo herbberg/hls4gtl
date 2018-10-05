@@ -21,6 +21,7 @@ void comb_matrix(T1 data[MAX_REQ][MAX_OBJ], const T2 requirements[MAX_REQ], cons
 #pragma HLS ARRAY_PARTITION variable=requirements complete dim=0
 #pragma HLS ARRAY_PARTITION variable=objects complete dim=0
 #pragma HLS ARRAY_PARTITION variable=data complete dim=0
+
     init_2d<ap_uint<1>, MAX_REQ, MAX_OBJ>(data, 0x1);
     for (size_t i = 0; i < NREQ; i++)
 #pragma HLS UNROLL
@@ -34,6 +35,7 @@ template<size_t SLICE_MIN, size_t SLICE_MAX>
 ap_uint<1> comb_partial(const size_t i, const ap_uint<1> matrix[MAX_REQ][MAX_OBJ])
 {
 #pragma HLS INTERFACE ap_ctrl_none port=return
+
     ap_uint<1> result = false;
 
     for (size_t j = SLICE_MIN; j <= SLICE_MAX; j++)
