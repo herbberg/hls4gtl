@@ -23,8 +23,8 @@ ap_uint<1> eta(const T1& cut, const T2& object)
     {
         for (size_t i = 0; i < T1::ETA_WINDOWS; ++i)
         {
-#pragma HLS unroll
 #pragma HLS ARRAY_PARTITION variable=cut.eta complete dim=0
+#pragma HLS UNROLL
             if (i < cut.n_eta)
             {
                 result |= (object.eta >= cut.eta[i].minimum) and (object.eta <= cut.eta[i].maximum);
