@@ -210,7 +210,7 @@ def cmd_cosim(args):
 
 def cmd_export(args):
     cmd_auto_create_project(args)
-    cmd_cosim(args)
+    #cmd_cosim(args)
     context='config/export.tcl'
     command = [args.vivado_hls, context]
     check_call(command)
