@@ -1,7 +1,7 @@
 #ifndef gtl_cut_etmhf_h
 #define gtl_cut_etmhf_h
 
-#include "../object/etmhfhf.h"
+#include "../object/etmhf.h"
 
 #include "../comparator/pt.h"
 #include "../comparator/phi.h"
