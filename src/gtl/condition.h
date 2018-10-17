@@ -3,5 +3,6 @@
 
 #include "condition/comb.h"
 #include "condition/signal.h"
+#include "condition/count.h"
 
 #endif

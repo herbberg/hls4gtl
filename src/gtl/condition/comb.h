@@ -38,6 +38,8 @@ ap_uint<1> comb_partial(const size_t i, const ap_uint<1> matrix[MAX_REQ][MAX_OBJ
 
     ap_uint<1> result = false;
 
+//    std::cerr << "result comb_partial matrix[0][0]: " << matrix[0][0] << "\n";
+
     for (size_t j = SLICE_MIN; j <= SLICE_MAX; j++)
     {
 #pragma HLS UNROLL
@@ -54,12 +56,15 @@ ap_uint<1> comb_partial(const size_t i, const ap_uint<1> matrix[MAX_REQ][MAX_OBJ
             }
         }
     }
+    
+//     std::cerr << "result comb_partial: " << result << "\n";
+    
     return result;
 }
 
 /* Combination condition */
 template<typename T2, typename T3, size_t NREQ, size_t SLICE_MIN, size_t SLICE_MAX>
-ap_uint<1> comb(const T2 requirements[MAX_REQ], const T3 objects[MAX_OBJ])
+ap_uint<1> comb(const T2 requirements[MAX_REQ], const T3 objects[MAX_OBJ])    
 {
 #pragma HLS INTERFACE ap_ctrl_none port=return
 #pragma HLS ARRAY_PARTITION variable=requirements complete dim=0
@@ -77,6 +82,8 @@ ap_uint<1> comb(const T2 requirements[MAX_REQ], const T3 objects[MAX_OBJ])
         result |= comb_partial<SLICE_MIN, SLICE_MAX>(i, matrix);
     }
 
+//     std::cerr << "result comb: " << result << "\n";
+    
     return result;
 }
 

@@ -46,12 +46,12 @@ struct in_data_t
     jet_type jet[JET_SIZE];
     tau_type tau[TAU_SIZE];
     muon_type muon[MUON_SIZE];
-    ett_type ett;
-    htt_type htt;
-    etm_type etm;
-    etmhf_type etmhf;
-    ettem_type ettem;
-    htm_type htm;
+    ett_type ett[1];
+    htt_type htt[1];
+    etm_type etm[1];
+    etmhf_type etmhf[1];
+    ettem_type ettem[1];
+    htm_type htm[1];
     mbt0hfp_type mbt0hfp[1];
     mbt0hfm_type mbt0hfm[1];
     mbt1hfp_type mbt1hfp[1];
