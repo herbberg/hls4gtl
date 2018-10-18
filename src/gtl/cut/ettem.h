@@ -5,8 +5,6 @@
 
 #include "../comparator/pt.h"
 
-// #include "../utils/range.h"
-
 #include <cstddef>
 #include <ap_int.h>
 

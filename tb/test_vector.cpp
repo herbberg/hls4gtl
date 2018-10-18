@@ -169,7 +169,7 @@ void test_vector::load_etm(std::istream& is)
     etm.phi = data.slice(12, 19);
     auto& asymmetry_et = in_data.asymmetry_et[0];
     asymmetry_et.count = data.slice(20, 27);
-    auto& mbt1hfp = in_data.mbt1hfp[1];
+    auto& mbt1hfp = in_data.mbt1hfp[0];
     mbt1hfp.count = data.slice(28, 31);
 
     if (verbose)

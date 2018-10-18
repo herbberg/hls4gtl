@@ -4,5 +4,6 @@
 #include "condition/comb.h"
 #include "condition/signal.h"
 #include "condition/count.h"
+#include "condition/esums.h"
 
 #endif
