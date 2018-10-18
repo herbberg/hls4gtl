@@ -15,11 +15,11 @@ struct centrality
 
     signal_id_type signal_id;
 
-    template<typename T>
-    result_type comp(const T& centrality) const
-    {
-        return centrality[signal_id];
-    };
+//     template<typename T>
+//     result_type comp(const T& centrality) const
+//     {
+//         return centrality[signal_id];
+//     };
 };
 
 } // namespace cut

@@ -25,7 +25,7 @@ struct test_vector
     static const size_t etmhf_size = 1;
     static const size_t htmhf_size = 1;
     static const size_t other_size = 6;
-    static const size_t external_size = 256;
+    static const size_t external_size = 1;
     static const size_t algorithm_size = 512;
 
     size_t bx;

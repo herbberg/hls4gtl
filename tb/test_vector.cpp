@@ -50,6 +50,8 @@ void test_vector::load_bx(std::istream& is)
 
     if (verbose)
         std::cerr << "<bx=" << bx << ">" << EOL;
+//     std::cout << "***************************************\n";
+//     std::cerr << "<bx=" << bx << ">" << EOL;
 }
 
 void test_vector::load_muons(std::istream& is)
@@ -208,6 +210,8 @@ void test_vector::load_etmhf(std::istream& is)
     auto& asymmetry_ethf = in_data.asymmetry_ethf[0];
     asymmetry_ethf.count = data.slice(20, 27);
     auto& centrality = in_data.centrality;
+//     std::cout << "***************************************\n";
+//     std::cout << "centrality in etmhf: " << std::hex << centrality << EOL;
     for (size_t i = 0; i < 4; ++i)
     {
         centrality[i] = data.slice(28+i, 28+i);
@@ -217,7 +221,10 @@ void test_vector::load_etmhf(std::istream& is)
     {
         std::cerr << etmhf << EOL;
         std::cerr << asymmetry_ethf << EOL;
+        std::cerr << centrality << EOL;
     }
+//     std::cout << "***************************************\n";
+//     std::cout << "centrality low: " << std::hex << centrality << EOL;
 }
 
 void test_vector::load_htmhf(std::istream& is)
@@ -230,6 +237,7 @@ void test_vector::load_htmhf(std::istream& is)
     auto& asymmetry_hthf = in_data.asymmetry_hthf[0];
     asymmetry_hthf.count = data.slice(20, 27);
     auto& centrality = in_data.centrality;
+//     std::cout << "centrality in htmhf: " << std::hex << centrality << EOL;
     for (size_t i = 0; i < 4; ++i)
     {
         centrality[i+4] = data.slice(28+i, 28+i);
@@ -238,7 +246,10 @@ void test_vector::load_htmhf(std::istream& is)
     if (verbose)
     {
         std::cerr << asymmetry_hthf << EOL;
+        std::cerr << centrality << EOL;
     }
+//     std::cout << "centrality high: " << std::hex << centrality << EOL;
+//     std::cout << "centrality: " << std::hex << centrality << EOL;
 }
 
 void test_vector::load_others(std::istream& is)
@@ -252,10 +263,24 @@ void test_vector::load_others(std::istream& is)
 
 void test_vector::load_externals(std::istream& is)
 {
-    externals = next(is);
-    assert(externals.data.size() == (external_size / byte_vector::byte_bits));
+//     externals = next(is);
+//     assert(externals.data.size() == (external_size / byte_vector::byte_bits));
+//     if (verbose)
+//         std::cerr << "<externals=0x" << externals << ">" << EOL;
+    byte_vector data = next(is);
+
+    auto& externals = in_data.external;
+    
+    for (size_t i = 0; i < 256; ++i)
+    {
+        externals[i] = data.slice(i, i);
+    }
+
     if (verbose)
-        std::cerr << "<externals=0x" << externals << ">" << EOL;
+        std::cerr << "<externals=" << externals << ">" << EOL;
+//     std::cout << std::hex << num << std::dec << std::endl;
+//     std::cout << "***************************************\n";
+//     std::cout << "<externals=0x" << std::hex << externals << ">"  << std::dec << EOL;
 }
 
 void test_vector::load_algorithms(std::istream& is)
@@ -264,6 +289,7 @@ void test_vector::load_algorithms(std::istream& is)
     assert(algorithms.data.size() == (algorithm_size / byte_vector::byte_bits));
     if (verbose)
         std::cerr << "<algorithms=0x" << algorithms << ">" << EOL;
+//     std::cout << "<algorithms=0x" << algorithms << ">" << EOL;
 }
 
 void test_vector::load_finor(std::istream& is)
