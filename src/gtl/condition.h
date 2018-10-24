@@ -5,5 +5,6 @@
 #include "condition/signal.h"
 #include "condition/count.h"
 #include "condition/esums.h"
+#include "condition/charge_correlation.h"
 
 #endif

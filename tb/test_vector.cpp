@@ -50,8 +50,8 @@ void test_vector::load_bx(std::istream& is)
 
     if (verbose)
         std::cerr << "<bx=" << bx << ">" << EOL;
-//     std::cout << "***************************************\n";
-//     std::cerr << "<bx=" << bx << ">" << EOL;
+    std::cout << "***************************************\n";
+    std::cerr << "<bx=" << bx << ">" << EOL;
 }
 
 void test_vector::load_muons(std::istream& is)
@@ -70,6 +70,7 @@ void test_vector::load_muons(std::istream& is)
 
         if (verbose)
             std::cerr << muon << EOL;
+        std::cerr << muon.charge << EOL;
     }
 }
 

@@ -31,6 +31,13 @@ struct muon
         NEGATIVE
     };
 
+    enum req_charge_corr_type
+    {
+        LS,
+        OS,
+        IGN
+    };
+
     static const size_t ETA_WINDOWS = 5;
     static const size_t PHI_WINDOWS = 2;
     static const size_t ISO_LUT_WIDTH = 4;
@@ -47,6 +54,7 @@ struct muon
     ap_uint<1> iso_lut[ISO_LUT_WIDTH];
     ap_uint<1> qual_lut[QUALITY_LUT_WIDTH];
     req_charge_type requested_charge;
+    req_charge_corr_type requested_charge_correlation;
 
     ap_uint<1> comp(const object_type& object) const
     {
