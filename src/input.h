@@ -37,8 +37,6 @@ struct in_data_t
     typedef object::external external_type;
     typedef size_t size_type;
     
-    typedef object::charge_correlation charge_correlation_type;
-
     const static size_type EG_SIZE = 12;
     const static size_type JET_SIZE = 12;
     const static size_type TAU_SIZE = 12;
@@ -73,7 +71,6 @@ struct in_data_t
     centrality_type centrality;
     external_type external;
     
-    charge_correlation_type charge_correlation;
 };
 
 #endif
