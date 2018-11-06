@@ -41,4 +41,4 @@ See also: https://github.com/arnobaer/tm-distribute/
 
 ## Contributing
 
-If you want to help us improve CloudCompare or create a new plugin you can start by reading this [guide](CONTRIBUTING.md)
+If you want to help improve hls4gtl you can start by reading this [guide](CONTRIBUTING.md)
