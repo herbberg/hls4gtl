@@ -14,13 +14,13 @@ void charge_corr_quad(const size_t i, const T1 objects[MAX_MUON_OBJ], ap_uint<1>
 
     ap_uint<1> result = false;
 
-    for (size_t j = 0; j <= MAX_MUON_OBJ; j++)
+    for (size_t j = 0; j < MAX_MUON_OBJ; j++)
     {
 #pragma HLS UNROLL
-        for (size_t k = 0; k <= MAX_MUON_OBJ; k++)
+        for (size_t k = 0; k < MAX_MUON_OBJ; k++)
         {
 #pragma HLS UNROLL
-            for (size_t l = 0; l <= MAX_MUON_OBJ; l++)
+            for (size_t l = 0; l < MAX_MUON_OBJ; l++)
             {
 #pragma HLS UNROLL
                 if (j != i and k != i and k != j and l != i and l != j and l != k)
@@ -59,7 +59,19 @@ void charge_corr_quad(const size_t i, const T1 objects[MAX_MUON_OBJ], ap_uint<1>
 template<typename T1>
 void charge_correlation_logic(const T1 objects[MAX_MUON_OBJ], ap_uint<1> ls_double[MAX_MUON_OBJ][MAX_MUON_OBJ], ap_uint<1> os_double[MAX_MUON_OBJ][MAX_MUON_OBJ], ap_uint<1> ls_triple[MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ], ap_uint<1> os_triple[MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ], ap_uint<1> ls_quad[MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ], ap_uint<1> os_quad[MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ])
 {
+#pragma HLS INTERFACE ap_ctrl_none port=ls_double
+#pragma HLS INTERFACE ap_ctrl_none port=os_double
+#pragma HLS INTERFACE ap_ctrl_none port=ls_triple
+#pragma HLS INTERFACE ap_ctrl_none port=os_triple
+#pragma HLS INTERFACE ap_ctrl_none port=ls_quad
+#pragma HLS INTERFACE ap_ctrl_none port=os_quad
 #pragma HLS ARRAY_PARTITION variable=objects complete dim=0
+#pragma HLS ARRAY_PARTITION variable=ls_double complete dim=0
+#pragma HLS ARRAY_PARTITION variable=os_double complete dim=0
+#pragma HLS ARRAY_PARTITION variable=ls_triple complete dim=0
+#pragma HLS ARRAY_PARTITION variable=os_triple complete dim=0
+#pragma HLS ARRAY_PARTITION variable=ls_quad complete dim=0
+#pragma HLS ARRAY_PARTITION variable=os_quad complete dim=0
 
 //     std::cout << "*** charge_correlation_logic:\n";
 // charge correlation double
@@ -100,13 +112,13 @@ void charge_correlation_logic(const T1 objects[MAX_MUON_OBJ], ap_uint<1> ls_doub
     }
 
 // charge correlation triple
-    for (size_t i = 0; i <= MAX_MUON_OBJ; i++)
+    for (size_t i = 0; i < MAX_MUON_OBJ; i++)
     {
 #pragma HLS UNROLL
-        for (size_t j = 0; j <= MAX_MUON_OBJ; j++)
+        for (size_t j = 0; j < MAX_MUON_OBJ; j++)
         {
 #pragma HLS UNROLL
-            for (size_t k = 0; k <= MAX_MUON_OBJ; k++)
+            for (size_t k = 0; k < MAX_MUON_OBJ; k++)
             {
 #pragma HLS UNROLL
                 if (j != i and k != i and k != j )
@@ -139,133 +151,11 @@ void charge_correlation_logic(const T1 objects[MAX_MUON_OBJ], ap_uint<1> ls_doub
     }
 
 // charge correlation quad
-    for (size_t i = 0; i <= MAX_MUON_OBJ; i++)
+    for (size_t i = 0; i < MAX_MUON_OBJ; i++)
     {
 #pragma HLS UNROLL
         charge_corr_quad<T1>(i, objects, ls_quad, os_quad);
     }
-
-//     for (size_t i = 0; i < MAX_MUON_OBJ; i++)
-//     {
-// #pragma HLS UNROLL
-//         for (size_t j = 0; j < MAX_MUON_OBJ; j++)
-//         {
-// #pragma HLS UNROLL
-//             if (j != i)
-//             {
-//                 charge_correlation.ls_double[i][j] = false;
-//                 charge_correlation.os_double[i][j] = false;
-// //                 std::cout << "begin => charge_correlation.ls_double[" << i << "][" << j << "]: " << charge_correlation.ls_double[i][j] << "\n";                
-// //                 std::cout << "begin => charge_correlation.os_double[" << i << "][" << j << "]: " << charge_correlation.os_double[i][j] << "\n";                
-//                 if (objects[i].charge[1] and objects[j].charge[1]) // both charge valid bits have to be true
-//                 {
-//                     if (objects[i].charge[0] and objects[j].charge[0]) // both charge sign bits are true = like sign
-//                     {
-//                         charge_correlation.ls_double[i][j] = true; 
-// //                         std::cout << "sign bits = 1 => charge_correlation.ls_double[" << i << "][" << j <<"]: " << charge_correlation.ls_double[i][j] << "\n";                
-//                     }
-//                     else if (not objects[i].charge[0] and not objects[j].charge[0]) // both charge sign bits are false = like sign
-//                     {
-//                         charge_correlation.ls_double[i][j] = true; 
-// //                         std::cout << "sign bits = 0 => charge_correlation.ls_double[" << i << "][" << j <<"]: " << charge_correlation.ls_double[i][j] << "\n";                
-//                     }
-//                     else
-//                     {
-//                         charge_correlation.os_double[i][j] = true; // opposite sign
-// //                         std::cout << "sign bits not equal => charge_correlation.os_double[" << i << "][" << j << "]: " << charge_correlation.os_double[i][j] << "\n";                
-//                     }
-//                 }
-//                 else
-//                 {
-//                     charge_correlation.ls_double[i][j] = false;
-//                     charge_correlation.os_double[i][j] = false;
-//                 }
-// //             std::cout << "charge_correlation.ls_double[" << i << "][" << j <<"]: " << charge_correlation.ls_double[i][j] << "   charge_correlation.os_double[" << i << "][" << j << "]: " << charge_correlation.os_double[i][j] <<"\n";                
-//             }
-//         }
-//     }
-    
-// // charge correlation triple
-//     for (size_t i = 0; i <= MAX_MUON_OBJ; i++)
-//     {
-// #pragma HLS UNROLL
-//         for (size_t j = 0; j <= MAX_MUON_OBJ; j++)
-//         {
-// #pragma HLS UNROLL
-//             for (size_t k = 0; k <= MAX_MUON_OBJ; k++)
-//             {
-// #pragma HLS UNROLL
-//                 if (j != i and k != i and k != j )
-//                 {
-//                     charge_correlation.ls_triple[i][j][k] = false;
-//                     charge_correlation.os_triple[i][j][k] = false;
-//                     if (objects[i].charge[1] and objects[j].charge[1] and objects[k].charge[1]) // like sign
-//                     {
-//                         if (objects[i].charge[0] and objects[j].charge[0] and objects[k].charge[0])
-//                         {
-//                             charge_correlation.ls_triple[i][j][k] = true; 
-//                         }
-//                         else if (not objects[i].charge[0] and not objects[j].charge[0] and not objects[k].charge[0]) // like sign
-//                         {
-//                             charge_correlation.ls_triple[i][j][k] = true; 
-//                         }
-//                         else
-//                         {
-//                             charge_correlation.os_triple[i][j][k] = true; // opposite sign
-//                         }
-//                     }
-//                     else
-//                     {
-//                         charge_correlation.ls_triple[i][j][k] = false;
-//                         charge_correlation.os_triple[i][j][k] = false;
-//                     }
-//                 }
-//             }
-//         }
-//     }
-//     
-// // charge correlation quad
-//     for (size_t i = 0; i <= MAX_MUON_OBJ; i++)
-//     {
-// #pragma HLS UNROLL
-//         for (size_t j = 0; j <= MAX_MUON_OBJ; j++)
-//         {
-// #pragma HLS UNROLL
-//             for (size_t k = 0; k <= MAX_MUON_OBJ; k++)
-//             {
-// #pragma HLS UNROLL
-//                 for (size_t l = 0; l <= MAX_MUON_OBJ; l++)
-//                 {
-// #pragma HLS UNROLL
-//                     if (j != i and k != i and k != j and l != i and l != j and l != k)
-//                     {
-//                         charge_correlation.ls_quad[i][j][k][l] = false;
-//                         charge_correlation.os_quad[i][j][k][l] = false;
-//                         if (objects[i].charge[1] and objects[j].charge[1] and objects[k].charge[1] and objects[l].charge[1]) // like sign
-//                         {
-//                             if (objects[i].charge[0] and objects[j].charge[0] and objects[k].charge[0] and objects[l].charge[0])
-//                             {
-//                                 charge_correlation.ls_quad[i][j][k][l] = true; 
-//                             }
-//                             else if (not objects[i].charge[0] and not objects[j].charge[0] and not objects[k].charge[0] and not objects[l].charge[0]) // like sign
-//                             {
-//                                 charge_correlation.ls_quad[i][j][k][l] = true; 
-//                             }
-//                             else
-//                             {
-//                                 charge_correlation.os_quad[i][j][k][l] = true; // opposite sign
-//                             }
-//                         }
-//                         else
-//                         {
-//                             charge_correlation.ls_quad[i][j][k][l] = false;
-//                             charge_correlation.os_quad[i][j][k][l] = false;
-//                         }
-//                     }
-//                 }
-//             }
-//         }
-//     }
 }
 
 } // namespace condition

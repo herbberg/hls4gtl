@@ -1,6 +1,7 @@
 
 #include "../src/algos.h"
 #include "../src/current_dist.h"
+#include "charge_correlation.h"
 
 #include "test_vector.h"
 #include "ostream_utils.h"
@@ -75,6 +76,9 @@ size_t run_testvector(const std::string& filename)
     tb::test_vector input;
     input.verbose = false;
 
+    in_data_t in_data_bx[N_BX_DATA] = {};
+    ap_uint<2> muon_charge[N_BX_DATA][MAX_MUON_OBJ];
+
     // open test vector file, sef optional file using argv[1]
     std::ifstream tv(filename);
     if (not tv.is_open())
@@ -86,18 +90,29 @@ size_t run_testvector(const std::string& filename)
     std::cerr << "INFO: processing testvector '" << filename << "'" << std::endl;
 
     size_t row = 0;
-    size_t mismatches = 0;
-
+    size_t mismatches = 0;    
+    
     for (std::string line; std::getline(tv, line); ++row)
     {
         input.load(line);
+        
+        for (size_t i = 0; i < N_BX_DATA; ++i) 
+        {
+            in_data_bx[i] = input.in_data;
 
+            for (size_t j = 0; j < MAX_MUON_OBJ; ++j)
+            {
+                muon_charge[i][j] = input.in_data.muon[j].charge;
+            }
+            tb::charge_correlation_logic(muon_charge[i], in_data_bx[i].cc_double, in_data_bx[i].cc_triple, in_data_bx[i].cc_quad);
+        }
+        
         ap_uint<1> output[N_ALGORITHMS] = {};
 
         if (input.verbose)
             std::cerr << "INFO: processing event " << input.bx << " ..." << std::endl;
 
-        algos(input.in_data, output);
+        algos(in_data_bx, output);
 
         if (input.verbose)
             std::cerr << "INFO: checking event " << input.bx << " ..." << std::endl;

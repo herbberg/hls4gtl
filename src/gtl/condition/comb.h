@@ -82,7 +82,7 @@ ap_uint<1> comb(const T2 requirements[MAX_REQ], const T3 objects[MAX_OBJ])
 }
 
 template<typename T1, size_t SLICE_MIN, size_t SLICE_MAX, size_t RANGE >
-ap_uint<1> comb_partial_muon_double(const size_t i, const ap_uint<1> matrix[MAX_REQ][RANGE], const T1 requirements[MAX_REQ], const ap_uint<1> ls_double[MAX_MUON_OBJ][MAX_MUON_OBJ], const ap_uint<1> os_double[MAX_MUON_OBJ][MAX_MUON_OBJ])
+ap_uint<1> comb_partial_muon_double(const size_t i, const ap_uint<1> matrix[MAX_REQ][RANGE], const T1 requirements[MAX_REQ], const ap_uint<2> cc_double[MAX_MUON_OBJ][MAX_MUON_OBJ])
 {
 #pragma HLS INTERFACE ap_ctrl_none port=return
 #pragma HLS ARRAY_PARTITION variable=requirements complete dim=0
@@ -95,11 +95,11 @@ ap_uint<1> comb_partial_muon_double(const size_t i, const ap_uint<1> matrix[MAX_
 #pragma HLS UNROLL
         if (j != i)
         {
-            if (ls_double[i][j] and requirements[0].requested_charge_correlation == gtl::cut::muon::LS)
+            if (cc_double[i][j] == 1 and requirements[0].requested_charge_correlation == gtl::cut::muon::LS)
             {
                 charge_comp[i][j] = true;
             }
-            else if (os_double[i][j] and requirements[0].requested_charge_correlation == gtl::cut::muon::OS)
+            else if (cc_double[i][j] == 2 and requirements[0].requested_charge_correlation == gtl::cut::muon::OS)
             {
                 charge_comp[i][j] = true;
             }
@@ -118,7 +118,7 @@ ap_uint<1> comb_partial_muon_double(const size_t i, const ap_uint<1> matrix[MAX_
 }
 
 template<typename T1, size_t SLICE_MIN, size_t SLICE_MAX, size_t RANGE >
-ap_uint<1> comb_partial_muon_triple(const size_t i, const ap_uint<1> matrix[MAX_REQ][RANGE], const T1 requirements[MAX_REQ], const ap_uint<1> ls_triple[MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ], const ap_uint<1> os_triple[MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ])
+ap_uint<1> comb_partial_muon_triple(const size_t i, const ap_uint<1> matrix[MAX_REQ][RANGE], const T1 requirements[MAX_REQ], const ap_uint<2> cc_triple[MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ])
 {
 #pragma HLS INTERFACE ap_ctrl_none port=return
 #pragma HLS ARRAY_PARTITION variable=requirements complete dim=0
@@ -134,15 +134,15 @@ ap_uint<1> comb_partial_muon_triple(const size_t i, const ap_uint<1> matrix[MAX_
 #pragma HLS UNROLL
             if (j != i and k != i and k != j )
             {
-                if (ls_triple[i][j][k] and requirements[0].requested_charge_correlation == 0)
+                if (cc_triple[i][j][k] == 1 and requirements[0].requested_charge_correlation == gtl::cut::muon::LS)
                 {
                     charge_comp[i][j][k] = true;
                 }
-                else if (os_triple[i][j][k] and requirements[0].requested_charge_correlation == 1)
+                else if (cc_triple[i][j][k] == 2 and requirements[0].requested_charge_correlation == gtl::cut::muon::OS)
                 {
                     charge_comp[i][j][k] = true;
                 }
-                else if (requirements[0].requested_charge_correlation == 2)
+                else if (requirements[0].requested_charge_correlation == gtl::cut::muon::IGN)
                 {
                     charge_comp[i][j][k] = true;
                 }
@@ -158,7 +158,7 @@ ap_uint<1> comb_partial_muon_triple(const size_t i, const ap_uint<1> matrix[MAX_
 }
 
 template<typename T1, size_t SLICE_MIN, size_t SLICE_MAX, size_t RANGE >
-ap_uint<1> comb_partial_muon_quad(const size_t i, const ap_uint<1> matrix[MAX_REQ][RANGE], const T1 requirements[MAX_REQ], const ap_uint<1> ls_quad[MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ], const ap_uint<1> os_quad[MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ])
+ap_uint<1> comb_partial_muon_quad(const size_t i, const ap_uint<1> matrix[MAX_REQ][RANGE], const T1 requirements[MAX_REQ], const ap_uint<2> cc_quad[MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ])
 {
 #pragma HLS INTERFACE ap_ctrl_none port=return
 #pragma HLS ARRAY_PARTITION variable=requirements complete dim=0
@@ -177,15 +177,15 @@ ap_uint<1> comb_partial_muon_quad(const size_t i, const ap_uint<1> matrix[MAX_RE
 #pragma HLS UNROLL
                 if (j != i and k != i and k != j and l != i and l != j and l != k)
                 {
-                    if (ls_quad[i][j][k][l] and requirements[0].requested_charge_correlation == 0)
+                    if (cc_quad[i][j][k][l] == 1 and requirements[0].requested_charge_correlation == gtl::cut::muon::LS)
                     {
                         charge_comp[i][j][k][l] = true;
                     }
-                    else if (os_quad[i][j][k][l] and requirements[0].requested_charge_correlation == 1)
+                    else if (cc_quad[i][j][k][l] == 2 and requirements[0].requested_charge_correlation == gtl::cut::muon::OS)
                     {
                         charge_comp[i][j][k][l] = true;
                     }
-                    else if (requirements[0].requested_charge_correlation == 2)
+                    else if (requirements[0].requested_charge_correlation == gtl::cut::muon::IGN)
                     {
                         charge_comp[i][j][k][l] = true;
                     }
@@ -201,135 +201,16 @@ ap_uint<1> comb_partial_muon_quad(const size_t i, const ap_uint<1> matrix[MAX_RE
     return result;
 }
 
-// template<typename T1, typename T2, size_t SLICE_MIN, size_t SLICE_MAX, size_t RANGE >
-// ap_uint<1> comb_partial_muon_double(const size_t i, const ap_uint<1> matrix[MAX_REQ][RANGE], const T1 requirements[MAX_REQ], const T2 charge_correlation)
-// {
-// #pragma HLS INTERFACE ap_ctrl_none port=return
-// #pragma HLS ARRAY_PARTITION variable=requirements complete dim=0
-// 
-//     ap_uint<1> result = false;
-//     ap_uint<1> charge_comp[RANGE][RANGE] = {false};
-// 
-//     for (size_t j = SLICE_MIN; j <= SLICE_MAX; j++)
-//     {
-// #pragma HLS UNROLL
-//         if (j != i)
-//         {
-//             if (charge_correlation.ls_double[i][j] and requirements[0].requested_charge_correlation == gtl::cut::muon::LS)
-//             {
-//                 charge_comp[i][j] = true;
-//             }
-//             else if (charge_correlation.os_double[i][j] and requirements[0].requested_charge_correlation == gtl::cut::muon::OS)
-//             {
-//                 charge_comp[i][j] = true;
-//             }
-//             else if (requirements[0].requested_charge_correlation == gtl::cut::muon::IGN)
-//             {
-//                 charge_comp[i][j] = true;
-//             }
-//             else
-//             {
-//                 charge_comp[i][j] = false;
-//             }
-//             result |= matrix[0][i] and matrix[1][j] and charge_comp[i][j];
-//         }
-//     }
-//     return result;
-// }
-
-// template<typename T1, typename T2, size_t SLICE_MIN, size_t SLICE_MAX, size_t RANGE >
-// ap_uint<1> comb_partial_muon_triple(const size_t i, const ap_uint<1> matrix[MAX_REQ][RANGE], const T1 requirements[MAX_REQ], const T2 charge_correlation)
-// {
-// #pragma HLS INTERFACE ap_ctrl_none port=return
-// #pragma HLS ARRAY_PARTITION variable=requirements complete dim=0
-// 
-//     ap_uint<1> result = false;
-//     ap_uint<1> charge_comp[RANGE][RANGE][RANGE] = {false};
-// 
-//     for (size_t j = SLICE_MIN; j <= SLICE_MAX; j++)
-//     {
-// #pragma HLS UNROLL
-//         for (size_t k = SLICE_MIN; k <= SLICE_MAX; k++)
-//         {
-// #pragma HLS UNROLL
-//             if (j != i and k != i and k != j )
-//             {
-//                 if (charge_correlation.ls_triple[i][j][k] and requirements[0].requested_charge_correlation == 0)
-//                 {
-//                     charge_comp[i][j][k] = true;
-//                 }
-//                 else if (charge_correlation.os_triple[i][j][k] and requirements[0].requested_charge_correlation == 1)
-//                 {
-//                     charge_comp[i][j][k] = true;
-//                 }
-//                 else if (requirements[0].requested_charge_correlation == 2)
-//                 {
-//                     charge_comp[i][j][k] = true;
-//                 }
-//                 else
-//                 {
-//                     charge_comp[i][j][k] = false;
-//                 }
-//                 result |= matrix[0][i] and matrix[1][j]  and matrix[2][k] and charge_comp[i][j][k];
-//             }
-//         }
-//     }
-//     return result;
-// }
-// 
-// template<typename T1, typename T2, size_t SLICE_MIN, size_t SLICE_MAX, size_t RANGE >
-// ap_uint<1> comb_partial_muon_quad(const size_t i, const ap_uint<1> matrix[MAX_REQ][RANGE], const T1 requirements[MAX_REQ], const T2 charge_correlation)
-// {
-// #pragma HLS INTERFACE ap_ctrl_none port=return
-// #pragma HLS ARRAY_PARTITION variable=requirements complete dim=0
-// 
-//     ap_uint<1> result = false;
-//     ap_uint<1> charge_comp[RANGE][RANGE][RANGE][RANGE] = {false};
-// 
-//     for (size_t j = SLICE_MIN; j <= SLICE_MAX; j++)
-//     {
-// #pragma HLS UNROLL
-//         for (size_t k = SLICE_MIN; k <= SLICE_MAX; k++)
-//         {
-// #pragma HLS UNROLL
-//             for (size_t l = SLICE_MIN; l <= SLICE_MAX; l++)
-//             {
-// #pragma HLS UNROLL
-//                 if (j != i and k != i and k != j and l != i and l != j and l != k)
-//                 {
-//                     if (charge_correlation.ls_quad[i][j][k][l] and requirements[0].requested_charge_correlation == 0)
-//                     {
-//                         charge_comp[i][j][k][l] = true;
-//                     }
-//                     else if (charge_correlation.os_quad[i][j][k][l] and requirements[0].requested_charge_correlation == 1)
-//                     {
-//                         charge_comp[i][j][k][l] = true;
-//                     }
-//                     else if (requirements[0].requested_charge_correlation == 2)
-//                     {
-//                         charge_comp[i][j][k][l] = true;
-//                     }
-//                     else
-//                     {
-//                         charge_comp[i][j][k][l] = false;
-//                     }
-//                     result |= matrix[0][i] and matrix[1][j] and matrix[2][k] and matrix[3][l] and charge_comp[i][j][k][l];
-//                 }
-//             }
-//         }
-//     }
-//     return result;
-// }
-
 /* Combination condition for muon (overloading comb)*/
-// template<typename T1, typename T2, typename T3, size_t NREQ, size_t SLICE_MIN, size_t SLICE_MAX>
-// ap_uint<1> comb(const T1 requirements[MAX_REQ], const T2 objects[MAX_MUON_OBJ], const T3 charge_correlation)    
 template<typename T1, typename T2, size_t NREQ, size_t SLICE_MIN, size_t SLICE_MAX>
-ap_uint<1> comb(const T1 requirements[MAX_REQ], const T2 objects[MAX_MUON_OBJ], const ap_uint<1> ls_double[MAX_MUON_OBJ][MAX_MUON_OBJ], const ap_uint<1> os_double[MAX_MUON_OBJ][MAX_MUON_OBJ], const ap_uint<1> ls_triple[MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ], const ap_uint<1> os_triple[MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ], const ap_uint<1> ls_quad[MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ], const ap_uint<1> os_quad[MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ])    
+ap_uint<1> comb(const T1 requirements[MAX_REQ], const T2 objects[MAX_MUON_OBJ], const ap_uint<2> cc_double[MAX_MUON_OBJ][MAX_MUON_OBJ], const ap_uint<2> cc_triple[MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ], const ap_uint<2> cc_quad[MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ])    
 {
 #pragma HLS INTERFACE ap_ctrl_none port=return
 #pragma HLS ARRAY_PARTITION variable=requirements complete dim=0
 #pragma HLS ARRAY_PARTITION variable=objects complete dim=0
+#pragma HLS ARRAY_PARTITION variable=cc_double complete dim=0
+#pragma HLS ARRAY_PARTITION variable=cc_triple complete dim=0
+#pragma HLS ARRAY_PARTITION variable=cc_quad complete dim=0
 
     const size_t range = SLICE_MAX - SLICE_MIN + 1;
     
@@ -344,15 +225,15 @@ ap_uint<1> comb(const T1 requirements[MAX_REQ], const T2 objects[MAX_MUON_OBJ], 
 #pragma HLS UNROLL
         if (requirements[0].n_cuts == 2)
         {
-            result |= comb_partial_muon_double<T1, SLICE_MIN, SLICE_MAX, range>(i, matrix, requirements, ls_double, os_double);
+            result |= comb_partial_muon_double<T1, SLICE_MIN, SLICE_MAX, range>(i, matrix, requirements, cc_double);
         }
         else if (requirements[0].n_cuts == 3)
         {
-            result |= comb_partial_muon_triple<T1, SLICE_MIN, SLICE_MAX, range>(i, matrix, requirements, ls_triple, os_triple);
+            result |= comb_partial_muon_triple<T1, SLICE_MIN, SLICE_MAX, range>(i, matrix, requirements, cc_triple);
         }
         else if (requirements[0].n_cuts == 4)
         {
-            result |= comb_partial_muon_quad<T1, SLICE_MIN, SLICE_MAX, range>(i, matrix, requirements, ls_quad, os_quad);
+            result |= comb_partial_muon_quad<T1, SLICE_MIN, SLICE_MAX, range>(i, matrix, requirements, cc_quad);
         }
     }
 
