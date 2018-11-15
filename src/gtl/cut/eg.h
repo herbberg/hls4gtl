@@ -27,7 +27,6 @@ struct eg
     static const size_t PHI_WINDOWS = 2;
     static const size_t ISO_LUT_WIDTH = 4;
 
-    ap_uint<2> n_cuts;
     ap_uint<4> slice[2];
     object_type::pt_type pt;
     comparison_mode_t comparison_mode;

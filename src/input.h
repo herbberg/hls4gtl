@@ -40,13 +40,6 @@ struct in_data_t
     const static size_type TAU_SIZE = 12;
     const static size_type MUON_SIZE = 8;
 
-//     enum charge_corr_type
-//     {
-//         IGN,
-//         LS,
-//         OS
-//     };
-    
     eg_type eg[EG_SIZE];
     jet_type jet[JET_SIZE];
     tau_type tau[TAU_SIZE];
@@ -54,9 +47,6 @@ struct in_data_t
     ap_uint<2> cc_double[MUON_SIZE][MUON_SIZE];
     ap_uint<2> cc_triple[MUON_SIZE][MUON_SIZE][MUON_SIZE];
     ap_uint<2> cc_quad[MUON_SIZE][MUON_SIZE][MUON_SIZE][MUON_SIZE];
-//     charge_corr_type cc_double[MUON_SIZE][MUON_SIZE];
-//     charge_corr_type cc_triple[MUON_SIZE][MUON_SIZE][MUON_SIZE];
-//     charge_corr_type cc_quad[MUON_SIZE][MUON_SIZE][MUON_SIZE][MUON_SIZE];
     ett_type ett[1];
     htt_type htt[1];
     etm_type etm[1];

@@ -43,7 +43,6 @@ struct muon
     static const size_t ISO_LUT_WIDTH = 4;
     static const size_t QUALITY_LUT_WIDTH = 16;
 
-    ap_uint<2> n_cuts;
     ap_uint<4> slice[2];
     object_type::pt_type pt;
     comparison_mode_t comparison_mode;

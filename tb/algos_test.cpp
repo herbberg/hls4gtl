@@ -112,11 +112,13 @@ size_t run_testvector(const std::string& filename)
         if (input.verbose)
             std::cerr << "INFO: processing event " << input.bx << " ..." << std::endl;
 
+//         std::cerr << "*** bx: " << input.bx << std::endl;
+        
         algos(in_data_bx, output);
 
         if (input.verbose)
             std::cerr << "INFO: checking event " << input.bx << " ..." << std::endl;
-
+        
         size_t event_mismatches = 0;
 
         for (size_t i = 0; i < N_ALGORITHMS; ++i)

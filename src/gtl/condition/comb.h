@@ -1,6 +1,8 @@
 #ifndef gtl_condition_comb_h
 #define gtl_condition_comb_h
 
+#include <cstdio>
+
 namespace gtl {
 namespace condition {
    
@@ -162,7 +164,8 @@ ap_uint<1> comb_partial_muon_quad(const size_t i, const ap_uint<1> matrix[MAX_RE
 {
 #pragma HLS INTERFACE ap_ctrl_none port=return
 #pragma HLS ARRAY_PARTITION variable=requirements complete dim=0
-
+//     std::cout << "comb_partial_muon_quad\n";
+    
     ap_uint<1> result = false;
     ap_uint<1> charge_comp[RANGE][RANGE][RANGE][RANGE] = {false};
 
@@ -219,19 +222,19 @@ ap_uint<1> comb(const T1 requirements[MAX_REQ], const T2 objects[MAX_MUON_OBJ], 
 
     // calculate result matrix
     comb_matrix<ap_uint<1>, T1, T2, NREQ, SLICE_MIN, SLICE_MAX>(matrix, requirements, objects);
-    
+        
     for (size_t i = SLICE_MIN; i <= SLICE_MAX; i++)
     {
 #pragma HLS UNROLL
-        if (requirements[0].n_cuts == 2)
+        if (NREQ == 2)
         {
             result |= comb_partial_muon_double<T1, SLICE_MIN, SLICE_MAX, range>(i, matrix, requirements, cc_double);
         }
-        else if (requirements[0].n_cuts == 3)
+        else if (NREQ == 3)
         {
             result |= comb_partial_muon_triple<T1, SLICE_MIN, SLICE_MAX, range>(i, matrix, requirements, cc_triple);
         }
-        else if (requirements[0].n_cuts == 4)
+        else if (NREQ == 4)
         {
             result |= comb_partial_muon_quad<T1, SLICE_MIN, SLICE_MAX, range>(i, matrix, requirements, cc_quad);
         }

@@ -26,7 +26,6 @@ struct jet
     static const size_t ETA_WINDOWS = 5;
     static const size_t PHI_WINDOWS = 2;
 
-    ap_uint<2> n_cuts;
     ap_uint<4> slice[2];
     object_type::pt_type pt;
     comparison_mode_t comparison_mode;
