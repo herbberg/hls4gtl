@@ -77,7 +77,8 @@ size_t run_testvector(const std::string& filename)
     input.verbose = false;
 
     in_data_t in_data_bx[N_BX_DATA] = {};
-    ap_uint<2> muon_charge[N_BX_DATA][MAX_MUON_OBJ];
+    ap_uint<2> muon_charge[N_BX_DATA][N_BX_DATA][MAX_MUON_OBJ];
+    cc_bx_comb_t charge_correlation[cc_bx_comb_type::bx_comb_size] = {};
 
     // open test vector file, sef optional file using argv[1]
     std::ifstream tv(filename);
@@ -94,27 +95,21 @@ size_t run_testvector(const std::string& filename)
     
     for (std::string line; std::getline(tv, line); ++row)
     {
+// need to be extended for 5 bx 
         input.load(line);
-        
-        for (size_t i = 0; i < N_BX_DATA; ++i) 
+        in_data_bx[bx_0] = input.in_data;
+        for (size_t k = 0; k < MAX_MUON_OBJ; ++k)
         {
-            in_data_bx[i] = input.in_data;
-
-            for (size_t j = 0; j < MAX_MUON_OBJ; ++j)
-            {
-                muon_charge[i][j] = input.in_data.muon[j].charge;
-            }
-            tb::charge_correlation_logic(muon_charge[i], in_data_bx[i].cc_double, in_data_bx[i].cc_triple, in_data_bx[i].cc_quad);
+            muon_charge[bx_0][bx_0][k] = input.in_data.muon[k].charge;
         }
+        tb::charge_correlation_logic(muon_charge[bx_0][bx_0], charge_correlation[cc_bx_comb_type::bx_0_0]);
         
         ap_uint<1> output[N_ALGORITHMS] = {};
 
         if (input.verbose)
             std::cerr << "INFO: processing event " << input.bx << " ..." << std::endl;
 
-//         std::cerr << "*** bx: " << input.bx << std::endl;
-        
-        algos(in_data_bx, output);
+        algos(in_data_bx, charge_correlation, output);
 
         if (input.verbose)
             std::cerr << "INFO: checking event " << input.bx << " ..." << std::endl;

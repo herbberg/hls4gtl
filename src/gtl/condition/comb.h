@@ -84,7 +84,7 @@ ap_uint<1> comb(const T2 requirements[MAX_REQ], const T3 objects[MAX_OBJ])
 }
 
 template<typename T1, size_t SLICE_MIN, size_t SLICE_MAX, size_t RANGE >
-ap_uint<1> comb_partial_muon_double(const size_t i, const ap_uint<1> matrix[MAX_REQ][RANGE], const T1 requirements[MAX_REQ], const ap_uint<2> cc_double[MAX_MUON_OBJ][MAX_MUON_OBJ])
+ap_uint<1> comb_partial_muon_double(const size_t i, const ap_uint<1> matrix[MAX_REQ][RANGE], const T1 requirements[MAX_REQ], const cc_type cc_double[MAX_MUON_OBJ][MAX_MUON_OBJ])
 {
 #pragma HLS INTERFACE ap_ctrl_none port=return
 #pragma HLS ARRAY_PARTITION variable=requirements complete dim=0
@@ -120,7 +120,7 @@ ap_uint<1> comb_partial_muon_double(const size_t i, const ap_uint<1> matrix[MAX_
 }
 
 template<typename T1, size_t SLICE_MIN, size_t SLICE_MAX, size_t RANGE >
-ap_uint<1> comb_partial_muon_triple(const size_t i, const ap_uint<1> matrix[MAX_REQ][RANGE], const T1 requirements[MAX_REQ], const ap_uint<2> cc_triple[MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ])
+ap_uint<1> comb_partial_muon_triple(const size_t i, const ap_uint<1> matrix[MAX_REQ][RANGE], const T1 requirements[MAX_REQ], const cc_type cc_triple[MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ])
 {
 #pragma HLS INTERFACE ap_ctrl_none port=return
 #pragma HLS ARRAY_PARTITION variable=requirements complete dim=0
@@ -160,11 +160,10 @@ ap_uint<1> comb_partial_muon_triple(const size_t i, const ap_uint<1> matrix[MAX_
 }
 
 template<typename T1, size_t SLICE_MIN, size_t SLICE_MAX, size_t RANGE >
-ap_uint<1> comb_partial_muon_quad(const size_t i, const ap_uint<1> matrix[MAX_REQ][RANGE], const T1 requirements[MAX_REQ], const ap_uint<2> cc_quad[MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ])
+ap_uint<1> comb_partial_muon_quad(const size_t i, const ap_uint<1> matrix[MAX_REQ][RANGE], const T1 requirements[MAX_REQ], const cc_type cc_quad[MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ])
 {
 #pragma HLS INTERFACE ap_ctrl_none port=return
 #pragma HLS ARRAY_PARTITION variable=requirements complete dim=0
-//     std::cout << "comb_partial_muon_quad\n";
     
     ap_uint<1> result = false;
     ap_uint<1> charge_comp[RANGE][RANGE][RANGE][RANGE] = {false};
@@ -238,6 +237,83 @@ ap_uint<1> comb(const T1 requirements[MAX_REQ], const T2 objects[MAX_MUON_OBJ], 
         {
             result |= comb_partial_muon_quad<T1, SLICE_MIN, SLICE_MAX, range>(i, matrix, requirements, cc_quad);
         }
+    }
+
+    return result;
+}
+
+template<typename T1, typename T2, size_t NREQ, size_t SLICE_MIN, size_t SLICE_MAX>
+ap_uint<1> muon_comb_double(const T1 requirements[MAX_REQ], const T2 objects[MAX_MUON_OBJ], const cc_type cc_double[MAX_MUON_OBJ][MAX_MUON_OBJ])    
+{
+#pragma HLS INTERFACE ap_ctrl_none port=return
+#pragma HLS ARRAY_PARTITION variable=requirements complete dim=0
+#pragma HLS ARRAY_PARTITION variable=objects complete dim=0
+#pragma HLS ARRAY_PARTITION variable=cc_double complete dim=0
+
+    const size_t range = SLICE_MAX - SLICE_MIN + 1;
+    
+    ap_uint<1> result = false;
+    ap_uint<1> matrix[MAX_REQ][range];
+
+    // calculate result matrix
+    comb_matrix<ap_uint<1>, T1, T2, NREQ, SLICE_MIN, SLICE_MAX>(matrix, requirements, objects);
+        
+    for (size_t i = SLICE_MIN; i <= SLICE_MAX; i++)
+    {
+#pragma HLS UNROLL
+        result |= comb_partial_muon_double<T1, SLICE_MIN, SLICE_MAX, range>(i, matrix, requirements, cc_double);
+    }
+
+    return result;
+}
+
+template<typename T1, typename T2, size_t NREQ, size_t SLICE_MIN, size_t SLICE_MAX>
+ap_uint<1> muon_comb_triple(const T1 requirements[MAX_REQ], const T2 objects[MAX_MUON_OBJ], const cc_type cc_triple[MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ])    
+{
+#pragma HLS INTERFACE ap_ctrl_none port=return
+#pragma HLS ARRAY_PARTITION variable=requirements complete dim=0
+#pragma HLS ARRAY_PARTITION variable=objects complete dim=0
+#pragma HLS ARRAY_PARTITION variable=cc_triple complete dim=0
+
+    const size_t range = SLICE_MAX - SLICE_MIN + 1;
+    
+    ap_uint<1> result = false;
+    ap_uint<1> matrix[MAX_REQ][range];
+
+    // calculate result matrix
+    comb_matrix<ap_uint<1>, T1, T2, NREQ, SLICE_MIN, SLICE_MAX>(matrix, requirements, objects);
+        
+    for (size_t i = SLICE_MIN; i <= SLICE_MAX; i++)
+    {
+#pragma HLS UNROLL
+        result |= comb_partial_muon_triple<T1, SLICE_MIN, SLICE_MAX, range>(i, matrix, requirements, cc_triple);
+    }
+
+    return result;
+}
+
+template<typename T1, typename T2, size_t NREQ, size_t SLICE_MIN, size_t SLICE_MAX>
+ap_uint<1> muon_comb_quad(const T1 requirements[MAX_REQ], const T2 objects[MAX_MUON_OBJ], const cc_type cc_quad[MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ][MAX_MUON_OBJ])    
+{
+#pragma HLS INTERFACE ap_ctrl_none port=return
+#pragma HLS ARRAY_PARTITION variable=requirements complete dim=0
+#pragma HLS ARRAY_PARTITION variable=objects complete dim=0
+#pragma HLS ARRAY_PARTITION variable=cc_double complete dim=0
+#pragma HLS ARRAY_PARTITION variable=cc_triple complete dim=0
+#pragma HLS ARRAY_PARTITION variable=cc_quad complete dim=0
+
+    const size_t range = SLICE_MAX - SLICE_MIN + 1;
+    
+    ap_uint<1> result = false;
+    ap_uint<1> matrix[MAX_REQ][range];
+
+    // calculate result matrix
+    comb_matrix<ap_uint<1>, T1, T2, NREQ, SLICE_MIN, SLICE_MAX>(matrix, requirements, objects);
+        
+    for (size_t i = SLICE_MIN; i <= SLICE_MAX; i++)
+    {
+#pragma HLS UNROLL
+            result |= comb_partial_muon_quad<T1, SLICE_MIN, SLICE_MAX, range>(i, matrix, requirements, cc_quad);
     }
 
     return result;

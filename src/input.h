@@ -44,9 +44,6 @@ struct in_data_t
     jet_type jet[JET_SIZE];
     tau_type tau[TAU_SIZE];
     muon_type muon[MUON_SIZE];
-    ap_uint<2> cc_double[MUON_SIZE][MUON_SIZE];
-    ap_uint<2> cc_triple[MUON_SIZE][MUON_SIZE][MUON_SIZE];
-    ap_uint<2> cc_quad[MUON_SIZE][MUON_SIZE][MUON_SIZE][MUON_SIZE];
     ett_type ett[1];
     htt_type htt[1];
     etm_type etm[1];
